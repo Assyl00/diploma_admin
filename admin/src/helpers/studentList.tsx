@@ -1,6 +1,6 @@
 const students = [
 	{
-		name: 'Name',
+		name: 'Assylgul',
 		surname: 'Surname',
 		midname: 'Midname',
 		faculty: 'FIT',

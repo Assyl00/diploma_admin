@@ -2,32 +2,16 @@ import { Modal, Table } from 'antd';
 import React from 'react';
 import { students } from '../helpers/studentList';
 import { Form, Button, Space, message, Upload, Input } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import type { FormItemProps } from 'antd';
+import { onValue, ref } from "firebase/database";
+import {db} from "../firebase";
+import Student from '../components/student/Student'
 
-
-const MyFormItemContext = React.createContext<(string | number)[]>([]);
-
-  const columns = [
-    {
-      title: 'ФИО',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Факультет, специальность',
-      dataIndex: 'faculty',
-      key: 'faculty',
-    },
-    {
-      title: 'ID студента',
-      dataIndex: 'id',
-      key: 'id',
-    },
-  ];
+  const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
   interface MyFormItemGroupProps {
     prefix: string | number | (string | number)[];
@@ -61,7 +45,7 @@ const MyFormItemContext = React.createContext<(string | number)[]>([]);
   });
   
   const Students: React.FC= () => {
-    const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([
@@ -71,21 +55,40 @@ const MyFormItemContext = React.createContext<(string | number)[]>([]);
       status: 'done',
       url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     },
-    // {
-    //   uid: '-xxx',
-    //   percent: 50,
-    //   name: 'image.png',
-    //   status: 'uploading',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
     {
       uid: '-5',
       name: 'image.png',
       status: 'error',
     },
   ]);
+// --------------------------------------------------------------------
 
-  const handleCancel = () => setPreviewOpen(false);
+	// const getUsers = async () => {
+	// 	const data = collection(db as any, 'persons')
+	// 	const citySnapshot = await getDocs(data);
+	// 	const cityList = citySnapshot.docs.map(doc => doc.data());
+	// 	//   setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+	// 	// console.log(data)
+	// };
+
+	// console.log(usersCollectionRef)s
+  // const [projects, setProjects]: any = useState([]);
+
+  // useEffect(() => {
+  //   const query = ref(db, "projects");
+  //   return onValue(query, (snapshot) => {
+  //     const data = snapshot.val();
+
+  //     if (snapshot.exists()) {
+  //       Object.values(data).map((project) => {
+  //         setProjects((projects: any) => [...projects, project]);
+  //       });
+  //     }
+  //   });
+  // }, []);
+
+    // -----------------------------------------------------------
+  // const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -116,12 +119,42 @@ const MyFormItemContext = React.createContext<(string | number)[]>([]);
         setIsModalOpen(false);
     };
 
-    // const handleCancel = () => {
-    //     setIsModalOpen(false);
-    // };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     const onFinish = (value: object) => {
         console.log(value);
-      };
+    };
+
+ 
+
+    const columns = [
+        {
+          title: 'ФИО',
+          dataIndex: 'name', 
+          key: 'name',
+          // render: () =>( <Button type="primary" 
+          //   onClick={showModal}>
+          //       {dataIndex}</Button>)
+        },
+        {
+          title: 'Факультет, специальность',
+          dataIndex: 'faculty',
+          key: 'faculty',
+        },
+        {
+          title: 'ID студента',
+          dataIndex: 'id',
+          key: 'id',
+        },
+        {
+          dataIndex: '',
+          key: 'x',
+          render: () =>( <Button type="primary" 
+            onClick={showModal}>
+                Edit</Button>)
+        },
+      ];  
     return ( 
         <>
         <Button type="primary" onClick={showModal}>Добавить студента
@@ -140,29 +173,29 @@ const MyFormItemContext = React.createContext<(string | number)[]>([]);
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
             <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
-      <MyFormItemGroup prefix={['user']}>
-        <MyFormItemGroup prefix={['name']}>
-          <MyFormItem name="firstName" label="First Name">
-            <Input />
-          </MyFormItem>
-          <MyFormItem name="lastName" label="Last Name">
-            <Input />
-          </MyFormItem>
-        </MyFormItemGroup>
+            <MyFormItemGroup prefix={['user']}>
+              <MyFormItemGroup prefix={['name']}>
+                <MyFormItem name="firstName" label="First Name">
+                  <Input />
+                </MyFormItem>
+                <MyFormItem name="lastName" label="Last Name">
+                  <Input />
+                </MyFormItem>
+              </MyFormItemGroup>
 
-        <MyFormItem name="age" label="Age">
-          <Input />
-        </MyFormItem>
-      </MyFormItemGroup>
+              <MyFormItem name="age" label="Age">
+                <Input />
+              </MyFormItem>
+            </MyFormItemGroup>
 
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
-    </Form>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            </Form>
         </Modal>
         <Table dataSource={students} columns={columns} />;
         
-          </>
+        </>
      );
 }
 
