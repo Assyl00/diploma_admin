@@ -85,9 +85,13 @@ import Realtime from './Realtime';
     </div>
   );
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenEdit, setIsModalEditOpen] = useState(false);
 
     const showModal = () => {
         setIsModalOpen(true);
+    };
+    const showModalEdit = () => {
+        setIsModalEditOpen(true);
     };
 
     const handleOk = () => {
@@ -144,7 +148,7 @@ import Realtime from './Realtime';
             dataIndex: '',
             key: 'x',
             render: () =>( <Button type="primary" 
-              onClick={showModal}>
+              onClick={showModalEdit}>
                   Edit</Button>)
           },
       ];  
@@ -170,6 +174,42 @@ import Realtime from './Realtime';
               <MyFormItemGroup prefix={['name']}>
                 <MyFormItem name="firstName" label="First Name">
                   <Input />
+                </MyFormItem>
+                <MyFormItem name="lastName" label="Last Name">
+                  <Input />
+                </MyFormItem>
+              </MyFormItemGroup>
+
+              <MyFormItem name="age" label="Age">
+                <Input />
+              </MyFormItem>
+            </MyFormItemGroup>
+
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            </Form>
+        </Modal>
+
+
+        <Modal title="Basic Modal" open={isModalOpenEdit} onOk={handleOk} onCancel={handleCancel}>
+            <Upload
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                listType="picture-circle"
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+                >
+                {fileList.length >= 8 ? null : uploadButton}
+            </Upload>
+            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+                <img alt="example" style={{ width: '100%' }} src={previewImage} />
+            </Modal>
+            <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
+            <MyFormItemGroup prefix={['user']}>
+              <MyFormItemGroup prefix={['name']}>
+                <MyFormItem name="firstName" label="First Name">
+                  <Input defaultValue="" />
                 </MyFormItem>
                 <MyFormItem name="lastName" label="Last Name">
                   <Input />
