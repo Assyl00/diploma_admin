@@ -8,8 +8,10 @@ import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import type { FormItemProps } from 'antd';
 import { onValue, ref } from "firebase/database";
-import {db} from "../firebase";
+// import {db} from "../firebase";
 import Student from '../components/student/Student'
+import Realtime from './Realtime';
+
 
   const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
@@ -126,35 +128,6 @@ import Student from '../components/student/Student'
         console.log(value);
     };
 
- 
-
-    const columns = [
-        {
-          title: 'ФИО',
-          dataIndex: 'name', 
-          key: 'name',
-          // render: () =>( <Button type="primary" 
-          //   onClick={showModal}>
-          //       {dataIndex}</Button>)
-        },
-        {
-          title: 'Факультет, специальность',
-          dataIndex: 'faculty',
-          key: 'faculty',
-        },
-        {
-          title: 'ID студента',
-          dataIndex: 'id',
-          key: 'id',
-        },
-        {
-          dataIndex: '',
-          key: 'x',
-          render: () =>( <Button type="primary" 
-            onClick={showModal}>
-                Edit</Button>)
-        },
-      ];  
     return ( 
         <>
         <Button type="primary" onClick={showModal}>Добавить студента
@@ -193,7 +166,7 @@ import Student from '../components/student/Student'
             </Button>
             </Form>
         </Modal>
-        <Table dataSource={students} columns={columns} />;
+        <Realtime />;
         
         </>
      );

@@ -3,6 +3,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "@firebase/firestore"
 import { getDatabase } from "firebase/database";
+import firebase from 'firebase/compat/app';
+import 'firebase/database';
 
 
   const firebaseConfig = {
@@ -19,4 +21,6 @@ import { getDatabase } from "firebase/database";
 const app = initializeApp(firebaseConfig);
 
 export const db = getDatabase(app)
+
+// export default firebaseConfig
 
