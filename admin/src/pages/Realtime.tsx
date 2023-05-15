@@ -67,7 +67,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { ref, onValue } from 'firebase/database';
-import { Table } from 'antd';
+import { Modal, Button, Table } from 'antd';
 
 interface Item {
     key: string;
@@ -76,24 +76,9 @@ interface Item {
   }
 
 function Realtime() {
-    // const [data, setData] = useState<Item[]>([]);
-
-    // useEffect(() => {
-    //   const dataRef = ref(db, 'persons');
-  
-    //   onValue(dataRef, (snapshot) => {
-    //     const fetchedData = snapshot.val();
-    //     const transformedData: Item[] = Object.keys(fetchedData).map((key) => ({
-    //         ...fetchedData[key],
-    //         key,
-    //       }));
-    //     setData(transformedData);
-    //   });
-    // }, []);
-
     const [postData, setPostData] = useState<Item[]>([]);
 
-  useEffect(() => {
+    useEffect(() => {
     const postsRef = ref(db, 'persons');
 
     onValue(postsRef, (snapshot) => {
@@ -123,8 +108,10 @@ function Realtime() {
           title: 'ID студента',
           dataIndex: 'key',
           key: 'key',
-        }
+        },
       ];  
+
+      
     
     return (
 

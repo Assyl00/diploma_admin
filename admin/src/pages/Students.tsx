@@ -8,7 +8,7 @@ import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import type { FormItemProps } from 'antd';
 import { onValue, ref } from "firebase/database";
-// import {db} from "../firebase";
+import {db} from "../firebase";
 import Student from '../components/student/Student'
 import Realtime from './Realtime';
 
@@ -63,34 +63,7 @@ import Realtime from './Realtime';
       status: 'error',
     },
   ]);
-// --------------------------------------------------------------------
 
-	// const getUsers = async () => {
-	// 	const data = collection(db as any, 'persons')
-	// 	const citySnapshot = await getDocs(data);
-	// 	const cityList = citySnapshot.docs.map(doc => doc.data());
-	// 	//   setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-	// 	// console.log(data)
-	// };
-
-	// console.log(usersCollectionRef)s
-  // const [projects, setProjects]: any = useState([]);
-
-  // useEffect(() => {
-  //   const query = ref(db, "projects");
-  //   return onValue(query, (snapshot) => {
-  //     const data = snapshot.val();
-
-  //     if (snapshot.exists()) {
-  //       Object.values(data).map((project) => {
-  //         setProjects((projects: any) => [...projects, project]);
-  //       });
-  //     }
-  //   });
-  // }, []);
-
-    // -----------------------------------------------------------
-  // const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -127,7 +100,54 @@ import Realtime from './Realtime';
     const onFinish = (value: object) => {
         console.log(value);
     };
+    // -------------------------------------------
+    interface Item {
+      key: string;
+      firstname: string;
+      id: string;
+    }
 
+    const [postData, setPostData] = useState<Item[]>([]);
+
+    useEffect(() => {
+    const postsRef = ref(db, 'persons');
+
+    onValue(postsRef, (snapshot) => {
+      const data = snapshot.val();
+      const transformedData = data
+        ? Object.keys(data).map((key) => ({ key, ...data[key] }))
+        : [];
+      setPostData(transformedData);
+    });
+  }, []);
+    
+    const columns = [
+        {
+          title: 'ФИО',
+          dataIndex: 'firstname', 
+          key: 'firstname',
+          // render: () =>( <Button type="primary" 
+          //   onClick={showModal}>
+          //       {dataIndex}</Button>)
+        },
+        {
+          title: 'Факультет, специальность',
+          dataIndex: 'major',
+          key: 'major',
+        },
+        {
+          title: 'ID студента',
+          dataIndex: 'key',
+          key: 'key',
+        },
+        {
+            dataIndex: '',
+            key: 'x',
+            render: () =>( <Button type="primary" 
+              onClick={showModal}>
+                  Edit</Button>)
+          },
+      ];  
     return ( 
         <>
         <Button type="primary" onClick={showModal}>Добавить студента
@@ -166,7 +186,7 @@ import Realtime from './Realtime';
             </Button>
             </Form>
         </Modal>
-        <Realtime />;
+        <Table dataSource={postData} columns={columns} />
         
         </>
      );
