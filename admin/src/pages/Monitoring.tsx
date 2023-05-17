@@ -3,6 +3,9 @@ import Header from "../components/header/Header"
 import {students} from "./../helpers/studentList"
 import Student from '../components/student/Student'
 
+import ImageComponent
+ from "../components/image/ImageComponent"
+
 const Monitoring = () => {
     return (  
         <>
@@ -16,7 +19,7 @@ const Monitoring = () => {
 								title={[student.name, student.surname]}
 								index={index}
 							/>
-						);
+						)
 					})}
 				</ul>
 			</div>

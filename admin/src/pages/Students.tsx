@@ -11,6 +11,7 @@ import { onValue, ref } from "firebase/database";
 import {db} from "../firebase";
 import Student from '../components/student/Student'
 import Realtime from './Realtime';
+import ImageComponent from '../components/image/ImageComponent';
 
 
   const MyFormItemContext = React.createContext<(string | number)[]>([]);
@@ -64,6 +65,16 @@ import Realtime from './Realtime';
     },
   ]);
 
+  
+  // const [fileList, setFileList] = useState<UploadFile[]>([
+  //   {
+  //     uid: '-1',
+  //     name: 'image.png',
+  //     status: 'done',
+  //     url: <ImageComponent filename={filename} />,
+  //   }
+  // ]);
+
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -104,8 +115,9 @@ import Realtime from './Realtime';
     const onFinish = (value: object) => {
         console.log(value);
     };
-    // -------------------------------------------
-    interface Item {
+// -----------------------------------------------------------------------------------------------------
+    
+interface Item {
       key: string;
       firstname: string;
       id: string;
@@ -123,7 +135,11 @@ import Realtime from './Realtime';
         : [];
       setPostData(transformedData);
     });
-  }, []);
+    }, []);
+    const postKeyToString = postData.map((post) => post.key).join(', ');
+    console.log(postKeyToString);
+
+    const filename = '19B030067.png';
     
     const columns = [
         {
@@ -145,8 +161,8 @@ import Realtime from './Realtime';
           key: 'key',
         },
         {
-            dataIndex: '',
-            key: 'x',
+            dataIndex: 'key',
+            key: 'key',
             render: () =>( <Button type="primary" 
               onClick={showModalEdit}>
                   Edit</Button>)
@@ -160,14 +176,15 @@ import Realtime from './Realtime';
             <Upload
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 listType="picture-circle"
-                fileList={fileList}
+                // fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChange}
                 >
-                {fileList.length >= 8 ? null : uploadButton}
+                {/* {fileList.length >= 8 ? null : uploadButton} */}
             </Upload>
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                
+                
             </Modal>
             <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
             <MyFormItemGroup prefix={['user']}>
@@ -193,7 +210,7 @@ import Realtime from './Realtime';
 
 
         <Modal title="Basic Modal" open={isModalOpenEdit} onOk={handleOk} onCancel={handleCancel}>
-            <Upload
+            {/* <Upload
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 listType="picture-circle"
                 fileList={fileList}
@@ -201,9 +218,10 @@ import Realtime from './Realtime';
                 onChange={handleChange}
                 >
                 {fileList.length >= 8 ? null : uploadButton}
-            </Upload>
+            </Upload> */}
+            <ImageComponent filename={filename} />
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                
             </Modal>
             <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
             <MyFormItemGroup prefix={['user']}>
@@ -234,3 +252,7 @@ import Realtime from './Realtime';
 
  
 export default Students;
+
+
+
+// <img alt="example" style={{ width: '100%' }} src={previewImage} />

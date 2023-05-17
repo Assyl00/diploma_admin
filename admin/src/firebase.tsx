@@ -5,6 +5,7 @@ import { getFirestore } from "@firebase/firestore"
 import { getDatabase } from "firebase/database";
 import firebase from 'firebase/compat/app';
 import 'firebase/database';
+import 'firebase/compat/storage';
 
 
   const firebaseConfig = {
@@ -18,9 +19,12 @@ import 'firebase/database';
     measurementId: "G-RT33VLWW4G"
   };
 // // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 
-export const db = getDatabase(app)
+export const db = getDatabase(app);
+
+export const storage = firebase.storage();
+
 
 // export default firebaseConfig
 

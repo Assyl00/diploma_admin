@@ -12,6 +12,7 @@ import Monitoring from './pages/Monitoring';
 import Students from './pages/Students';
 import Student from './pages/Student';
 import Realtime from './pages/Realtime';
+import ImageComponent from './components/image/ImageComponent';
 
 function App() {
   	// const usersCollectionRef = ref(db, "persons");
@@ -26,8 +27,10 @@ function App() {
 	// 	  });
 	//   }, []);
 
+
   return (
     <div className="App">
+		
       <Router>
 				<Navbar />
 				<Routes>
