@@ -1,18 +1,15 @@
 import { Modal, Table } from 'antd';
 import React from 'react';
-import { students } from '../helpers/studentList';
-import { Form, Button, Space, message, Upload, Input } from 'antd';
+import { Form, Button, Upload, Input } from 'antd';
 import { useState, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import type { FormItemProps } from 'antd';
-import { onValue, ref } from "firebase/database";
+import { ref, set, update } from "firebase/database";
 import {db} from "../firebase";
-import Student from '../components/student/Student'
-import Realtime from './Realtime';
 import ImageComponent from '../components/image/ImageComponent';
-
+import { onValue } from 'firebase/database'
 
   const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
@@ -107,48 +104,108 @@ import ImageComponent from '../components/image/ImageComponent';
 
     const handleOk = () => {
         setIsModalOpen(false);
+        setIsModalEditOpen(false);
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        setIsModalEditOpen(false);
     };
     const onFinish = (value: object) => {
         console.log(value);
     };
+
+   
 // -----------------------------------------------------------------------------------------------------
     
-interface Item {
+    interface Item {
       key: string;
       firstname: string;
-      id: string;
+      lastname: string;
+      middlename: string;
+      faculty: string;
+      major: string;
+      starting_year: number;
+      year: number;
     }
 
     const [postData, setPostData] = useState<Item[]>([]);
 
     useEffect(() => {
-    const postsRef = ref(db, 'persons');
+      const postsRef = ref(db, 'persons');
 
-    onValue(postsRef, (snapshot) => {
-      const data = snapshot.val();
-      const transformedData = data
-        ? Object.keys(data).map((key) => ({ key, ...data[key] }))
-        : [];
-      setPostData(transformedData);
-    });
+      onValue(postsRef, (snapshot) => {
+        const data = snapshot.val();
+        const transformedData = data
+          ? Object.keys(data).map((key) => ({ key, ...data[key] }))
+          : [];
+        setPostData(transformedData);
+        const oneData: string = data ? data.key : '';
+        
+      });
+
     }, []);
-    const postKeyToString = postData.map((post) => post.key).join(', ');
-    console.log(postKeyToString);
 
-    const filename = '19B030067.png';
+    const [selectedStudent, setSelectedStudent] = useState<Item | null>(null);
+    const [editedStudent, setEditedStudent] = useState<Item | null>(null);
+    const filename = selectedStudent?.key.concat(".png")
+
+    const handleEdit = (student: Item) => {
+      setSelectedStudent(student);
+      setEditedStudent({ ...student });
+      showModalEdit();
+    };
+
+    const handleModalClose = () => {
+      setSelectedStudent(null);
+      setEditedStudent(null);
+      handleCancel();
+    };
+  
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setEditedStudent((prevStudent: Item | null): Item | null => ({
+        ...prevStudent!,
+        [name]: value,
+      }));
+    };
+
+    const handleSave = () => {
+      if(selectedStudent && editedStudent){
+      // Update the student object with edited values
+      setSelectedStudent(editedStudent);
+
+      // Create an object with only the properties to be updated
+      const updates: Partial<Item> = {
+        faculty: editedStudent.faculty,
+        firstname: editedStudent.firstname,
+        lastname: editedStudent.lastname,
+        major: editedStudent.major,
+        middlename: editedStudent.middlename,
+        starting_year: editedStudent.starting_year,
+        year: editedStudent.year,
+      };
+
+      //save object to Realtime Database
+      update(ref(db, `persons/${selectedStudent.key}`), updates)
+        .then(() => {
+          console.log('Data successfully updated in the Realtime Database.');
+          console.log(selectedStudent.key)
+          handleModalClose();
+        })
+        .catch((error) => {
+          console.error('Error updating data in the Realtime Database:', error);
+        });
+  
+      // Perform additional save logic if needed
+      }
+    };
     
     const columns = [
         {
           title: 'ФИО',
           dataIndex: 'firstname', 
           key: 'firstname',
-          // render: () =>( <Button type="primary" 
-          //   onClick={showModal}>
-          //       {dataIndex}</Button>)
         },
         {
           title: 'Факультет, специальность',
@@ -163,9 +220,13 @@ interface Item {
         {
             dataIndex: 'key',
             key: 'key',
-            render: () =>( <Button type="primary" 
-              onClick={showModalEdit}>
-                  Edit</Button>)
+            render: (_: any, record: Item) => {
+              return(
+                <Button type="primary" onClick={() => handleEdit(record)}>
+                  Edit
+                </Button>
+              )
+              },
           },
       ];  
     return ( 
@@ -202,7 +263,7 @@ interface Item {
               </MyFormItem>
             </MyFormItemGroup>
 
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" >
               Submit
             </Button>
             </Form>
@@ -219,7 +280,7 @@ interface Item {
                 >
                 {fileList.length >= 8 ? null : uploadButton}
             </Upload> */}
-            <ImageComponent filename={filename} />
+            <ImageComponent filename= {filename!} />
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                 
             </Modal>
@@ -227,10 +288,10 @@ interface Item {
             <MyFormItemGroup prefix={['user']}>
               <MyFormItemGroup prefix={['name']}>
                 <MyFormItem name="firstName" label="First Name">
-                  <Input defaultValue="" />
+                  <Input defaultValue={selectedStudent?.firstname} onChange={handleInputChange}/>
                 </MyFormItem>
                 <MyFormItem name="lastName" label="Last Name">
-                  <Input />
+                  <Input defaultValue={selectedStudent?.lastname} onChange={handleInputChange}/>
                 </MyFormItem>
               </MyFormItemGroup>
 
@@ -239,7 +300,7 @@ interface Item {
               </MyFormItem>
             </MyFormItemGroup>
 
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" onClick={handleSave}>
               Submit
             </Button>
             </Form>
@@ -252,7 +313,3 @@ interface Item {
 
  
 export default Students;
-
-
-
-// <img alt="example" style={{ width: '100%' }} src={previewImage} />
