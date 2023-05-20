@@ -12,7 +12,7 @@ import Monitoring from './pages/Monitoring';
 import Students from './pages/Students';
 import Student from './pages/Student';
 import Realtime from './pages/Realtime';
-import ImageComponent from './components/image/ImageComponent';
+import ImageComponent from './components/additional/ImageComponent';
 
 function App() {
   	// const usersCollectionRef = ref(db, "persons");
@@ -27,7 +27,7 @@ function App() {
 	// 	  });
 	//   }, []);
 
-
+  document.title = 'Face ID Admin';
   return (
     <div className="App">
 		

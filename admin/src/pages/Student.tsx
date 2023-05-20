@@ -17,7 +17,7 @@ const Project = () => {
 					/>
 
 					<div className="project-details__desc">
-						<p>Skills: {student.name}</p>
+						<p>Name: {student.name}</p>
                         <p>Surname: {student.surname}</p>
                         <p>Faculty: {student.faculty}</p>
                         <p>Scpeciality: {student.speciality}</p>

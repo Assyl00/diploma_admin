@@ -5,11 +5,12 @@ import { useState, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
-import type { FormItemProps } from 'antd';
-import { ref, set, update } from "firebase/database";
+import { ref, update } from "firebase/database";
 import {db} from "../firebase";
-import ImageComponent from '../components/image/ImageComponent';
+import ImageComponent from '../components/additional/ImageComponent';
 import { onValue } from 'firebase/database'
+import { students } from '../helpers/studentList';
+import AddStudentModal from '../components/additional/AddStudentModal';
 
   const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
@@ -22,19 +23,19 @@ import { onValue } from 'firebase/database'
     return Array.isArray(str) ? str : [str];
   }
   
-  const MyFormItemGroup = ({ prefix, children }: MyFormItemGroupProps) => {
-    const prefixPath = React.useContext(MyFormItemContext);
-    const concatPath = React.useMemo(() => [...prefixPath, ...toArr(prefix)], [prefixPath, prefix]);
+  // const MyFormItemGroup = ({ prefix, children }: MyFormItemGroupProps) => {
+  //   const prefixPath = React.useContext(MyFormItemContext);
+  //   const concatPath = React.useMemo(() => [...prefixPath, ...toArr(prefix)], [prefixPath, prefix]);
   
-    return <MyFormItemContext.Provider value={concatPath}>{children}</MyFormItemContext.Provider>;
-  };
+  //   return <MyFormItemContext.Provider value={concatPath}>{children}</MyFormItemContext.Provider>;
+  // };
   
-  const MyFormItem = ({ name, ...props }: FormItemProps) => {
-    const prefixPath = React.useContext(MyFormItemContext);
-    const concatName = name !== undefined ? [...prefixPath, ...toArr(name)] : undefined;
+  // const MyFormItem = ({ name, ...props }: FormItemProps) => {
+  //   const prefixPath = React.useContext(MyFormItemContext);
+  //   const concatName = name !== undefined ? [...prefixPath, ...toArr(name)] : undefined;
   
-    return <Form.Item name={concatName} {...props} />;
-  };
+  //   return <Form.Item name={concatName} {...props} />;
+  // };
 
   const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -140,7 +141,7 @@ import { onValue } from 'firebase/database'
           ? Object.keys(data).map((key) => ({ key, ...data[key] }))
           : [];
         setPostData(transformedData);
-        const oneData: string = data ? data.key : '';
+        
         
       });
 
@@ -158,14 +159,14 @@ import { onValue } from 'firebase/database'
 
     const handleModalClose = () => {
       setSelectedStudent(null);
-      setEditedStudent(null);
+      // setEditedStudent(null);
       handleCancel();
     };
   
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
       setEditedStudent((prevStudent: Item | null): Item | null => ({
-        ...prevStudent!,
+        ...(prevStudent as Item),
         [name]: value,
       }));
     };
@@ -173,7 +174,11 @@ import { onValue } from 'firebase/database'
     const handleSave = () => {
       if(selectedStudent && editedStudent){
       // Update the student object with edited values
-      setSelectedStudent(editedStudent);
+      // setSelectedStudent(editedStudent);
+      setSelectedStudent((prevStudent) => ({
+        ...prevStudent,
+        ...editedStudent,
+      }));
 
       // Create an object with only the properties to be updated
       const updates: Partial<Item> = {
@@ -218,8 +223,8 @@ import { onValue } from 'firebase/database'
           key: 'key',
         },
         {
-            dataIndex: 'key',
-            key: 'key',
+            dataIndex: 'Actions',
+            key: 'actions',
             render: (_: any, record: Item) => {
               return(
                 <Button type="primary" onClick={() => handleEdit(record)}>
@@ -231,8 +236,9 @@ import { onValue } from 'firebase/database'
       ];  
     return ( 
         <>
-        <Button type="primary" onClick={showModal}>Добавить студента
-        </Button>
+        {/* <Button type="primary" onClick={showModal}>Добавить студента
+        </Button> */}
+        {AddStudentModal && <AddStudentModal/>}
         <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <Upload
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -241,31 +247,23 @@ import { onValue } from 'firebase/database'
                 onPreview={handlePreview}
                 onChange={handleChange}
                 >
-                {/* {fileList.length >= 8 ? null : uploadButton} */}
+                {fileList.length >= 8 ? null : uploadButton}
             </Upload>
-            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+            {/* <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                 
                 
-            </Modal>
+            </Modal> */}
             <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
-            <MyFormItemGroup prefix={['user']}>
-              <MyFormItemGroup prefix={['name']}>
-                <MyFormItem name="firstName" label="First Name">
-                  <Input />
-                </MyFormItem>
-                <MyFormItem name="lastName" label="Last Name">
-                  <Input />
-                </MyFormItem>
-              </MyFormItemGroup>
+                <Form.Item label="First Name">
+                  <Input name = "firstname" onChange={handleInputChange}/>
+                </Form.Item>
+                <Form.Item label="Last Name">
+                  <Input name = "lastname" onChange={handleInputChange}/>
+                </Form.Item>
 
-              <MyFormItem name="age" label="Age">
-                <Input />
-              </MyFormItem>
-            </MyFormItemGroup>
-
-            <Button type="primary" htmlType="submit" >
-              Submit
-            </Button>
+              <Button type="primary" htmlType="submit" onClick={handleSave}>
+                Submit
+              </Button>
             </Form>
         </Modal>
 
@@ -281,28 +279,17 @@ import { onValue } from 'firebase/database'
                 {fileList.length >= 8 ? null : uploadButton}
             </Upload> */}
             <ImageComponent filename= {filename!} />
-            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                
-            </Modal>
             <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
-            <MyFormItemGroup prefix={['user']}>
-              <MyFormItemGroup prefix={['name']}>
-                <MyFormItem name="firstName" label="First Name">
-                  <Input defaultValue={selectedStudent?.firstname} onChange={handleInputChange}/>
-                </MyFormItem>
-                <MyFormItem name="lastName" label="Last Name">
-                  <Input defaultValue={selectedStudent?.lastname} onChange={handleInputChange}/>
-                </MyFormItem>
-              </MyFormItemGroup>
+                <Form.Item label="First Name">
+                  <Input name = "firstname" value={editedStudent?.firstname} onChange={handleInputChange}/>
+                </Form.Item>
+                <Form.Item label="Last Name">
+                  <Input name = "lastname" value={editedStudent?.lastname} onChange={handleInputChange}/>
+                </Form.Item>
 
-              <MyFormItem name="age" label="Age">
-                <Input />
-              </MyFormItem>
-            </MyFormItemGroup>
-
-            <Button type="primary" htmlType="submit" onClick={handleSave}>
-              Submit
-            </Button>
+              <Button type="primary" htmlType="submit" onClick={handleSave}>
+                Submit
+              </Button>
             </Form>
         </Modal>
         <Table dataSource={postData} columns={columns} />

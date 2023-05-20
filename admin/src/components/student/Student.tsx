@@ -1,20 +1,54 @@
 import { NavLink } from 'react-router-dom';
 import './style.css';
+import { useEffect, useState } from 'react';
+import { onValue, ref } from 'firebase/database';
+import { db } from '../../firebase';
+import ImageComponent from '../additional/ImageComponent';
+
 
 type StudProps = {
     title: string[];
     index: number;
   };
 
-const Project = ({ title, index }: StudProps) => {
+interface Item {
+	key: string;
+	firstname: string;
+	lastname: string;
+	id: number;
+	enter_or_exit: string;
+	enter_time: string;
+  }
+
+const STudentPage = ({key, firstname, lastname, id, enter_or_exit, enter_time}: Item) => {
+	const [postData, setPostData] = useState<Item[]>([]);
+
+    useEffect(() => {
+      const postsRef = ref(db, 'sessions');
+
+      onValue(postsRef, (snapshot) => {
+        const data = snapshot.val();
+        const transformedData = data
+          ? Object.keys(data).map((key) => ({ key, ...data[key] }))
+          : [];
+        setPostData(transformedData);
+        
+      });
+
+    }, []);
+
 	return (
-		<NavLink to={`/student/${index}`}>
+		// <NavLink to={`/sessions/${key}`}>
 			<li className="student">
-				{/* <img src={img} alt={title} className="project__img" /> */}
-				<h3 className="student__title">{title}</h3>
+				<ImageComponent filename= {id! + '.png'} />
+				<p>{firstname}</p>
+				<p>{lastname}</p>
+				<p>{id}</p>
+				<p>{enter_or_exit}</p>
+				<p>{enter_time}</p>
 			</li>
-		</NavLink>
+		// </NavLink>
 	);
 };
 
-export default Project;
+export default STudentPage;
