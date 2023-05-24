@@ -1,15 +1,8 @@
-import { NavLink } from 'react-router-dom';
 import './style.css';
 import { useEffect, useState } from 'react';
 import { onValue, ref } from 'firebase/database';
 import { db } from '../../firebase';
 import ImageComponent from '../additional/ImageComponent';
-
-
-type StudProps = {
-    title: string[];
-    index: number;
-  };
 
 interface Item {
 	key: string;
@@ -20,7 +13,7 @@ interface Item {
 	enter_time: string;
   }
 
-const STudentPage = ({key, firstname, lastname, id, enter_or_exit, enter_time}: Item) => {
+const StudentCard = ({key, firstname, lastname, id, enter_or_exit, enter_time}: Item) => {
 	const [postData, setPostData] = useState<Item[]>([]);
 
     useEffect(() => {
@@ -51,4 +44,4 @@ const STudentPage = ({key, firstname, lastname, id, enter_or_exit, enter_time}: 
 	);
 };
 
-export default STudentPage;
+export default StudentCard;

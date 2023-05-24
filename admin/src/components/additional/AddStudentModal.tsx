@@ -76,21 +76,21 @@ const AddStudentModal = () => {
     }
   };
 
-  const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
+//   const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
 
-  const handleDateChange = (dates: Moment[] | null) => {
-    setSelectedDate(dates);
-  };
+//   const handleDateChange = (dates: Moment[] | null) => {
+//     setSelectedDate(dates);
+//   };
 
-  const getDefaultDates = (): Dayjs[] | null => {
-    if (selectedDate) {
-      return [
-        moment(selectedDate[0]).add(4, 'years').toDayjs(),
-        moment(selectedDate[1]).add(4, 'years').toDayjs()
-      ];
-    }
-    return null;
-  };
+//   const getDefaultDates = (): Dayjs[] | null => {
+//     if (selectedDate) {
+//       return [
+//         moment(selectedDate[0]).add(4, 'years').toDayjs(),
+//         moment(selectedDate[1]).add(4, 'years').toDayjs()
+//       ];
+//     }
+//     return null;
+//   };
 
   return (
     <>
@@ -167,7 +167,7 @@ const AddStudentModal = () => {
                 onChange={handleDateChange}
                 defaultValue={getDefaultDate()}
             /> */}
-            <RangePicker picker="month" value={selectedDate} />
+            {/* <RangePicker picker="month" value={selectedDate} /> */}
             </Space>
             
           </Form.Item>
