@@ -1,6 +1,6 @@
 import "./style.css"
 import { NavLink } from 'react-router-dom';
-import img from "./../../KBTU_logo 1.png";
+import img from "./../../KBTU_logo.jpg";
 
 const Navbar = () => {
     const activeLink = 'nav-list__link nav-list__link--active';

@@ -18,6 +18,7 @@ const getBase64 = (file: RcFile): Promise<string> =>
   });
 
 const { RangePicker } = DatePicker;
+const yearFormat = 'YYYY';
 
 const AddStudentModal = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -74,22 +75,6 @@ const AddStudentModal = () => {
     } catch (error) {
       console.log('Error adding student:', error);
     }
-  };
-
-  const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
-
-  const handleDateChange = (dates: Moment[] | null) => {
-    setSelectedDate(dates);
-  };
-
-  const getDefaultDates = (): Dayjs[] | null => {
-    if (selectedDate) {
-      return [
-        moment(selectedDate[0]).add(4, 'years').toDayjs(),
-        moment(selectedDate[1]).add(4, 'years').toDayjs()
-      ];
-    }
-    return null;
   };
 
   return (
@@ -155,28 +140,8 @@ const AddStudentModal = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="starting_year"
-            label="Starting year"
-            rules={[{ required: true, message: 'Please enter the faculty' }]}
-          >
-            <Space direction="vertical" size={12}>
-            {/* <RangePicker
-                picker="month"
-                value={selectedDate}
-                onChange={handleDateChange}
-                defaultValue={getDefaultDate()}
-            /> */}
-            <RangePicker picker="month" value={selectedDate} />
-            </Space>
-            
-          </Form.Item>
-          <Form.Item
-            name="year"
-            label="Year"
-            rules={[{ required: true, message: 'Please enter the faculty' }]}
-          >
-            <Input />
+          <Form.Item label="Starting year">
+            <DatePicker format={yearFormat} picker="year"/>
           </Form.Item>
         </Form>
       </Modal>

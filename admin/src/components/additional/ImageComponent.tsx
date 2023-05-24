@@ -30,7 +30,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({ filename }) => {
   return (
     <div>
       {imageUrl ? (
-        <img src={imageUrl} alt="Image" />
+        <img className='student__img' src={imageUrl} alt="Image"  />
       ) : (
         <span>Loading image...</span>
       )}

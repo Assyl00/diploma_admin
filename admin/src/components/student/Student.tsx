@@ -41,11 +41,13 @@ const STudentPage = ({key, firstname, lastname, id, enter_or_exit, enter_time}: 
 		// <NavLink to={`/sessions/${key}`}>
 			<li className="student">
 				<ImageComponent filename= {id! + '.png'} />
-				<p>{firstname}</p>
-				<p>{lastname}</p>
-				<p>{id}</p>
-				<p>{enter_or_exit}</p>
-				<p>{enter_time}</p>
+				<div className='student__card'>
+					<p>{firstname}</p>
+					<p>{lastname}</p>
+					<p>{id}</p>
+					<p>{enter_or_exit}</p>
+					<p>{enter_time}</p>
+				</div>
 			</li>
 		// </NavLink>
 	);
