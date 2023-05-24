@@ -9,10 +9,8 @@ import { useState, useEffect } from "react";
 
 import Navbar from "./components/navbar/Navbar";
 import Monitoring from './pages/Monitoring';
-import Students from './pages/Students';
-import Student from './pages/Student';
-import Realtime from './pages/Realtime';
-import ImageComponent from './components/additional/ImageComponent';
+import StudentsTable from './pages/StudentsTable';
+import Student from './pages/StudentInfo';
 
 function App() {
   	// const usersCollectionRef = ref(db, "persons");
@@ -32,15 +30,18 @@ function App() {
     <div className="App">
 		
       <Router>
-				<Navbar />
-				<Routes>
-					<Route path="/" element={<Monitoring />} />
-					<Route path="/students" element={<Students />} />
-					<Route path="/student/:id" element={<Student />} />
-				</Routes>
-			</Router>
+			<Navbar />
+			<Routes>
+				<Route path="/" element={<Monitoring />} />
+				<Route path="/students" element={<StudentsTable />} />
+			</Routes>
+	  </Router>
     </div>
   );
 }
 
 export default App;
+
+
+
+					{/* <Route path="/student/:id" element={<Student />} /> */}

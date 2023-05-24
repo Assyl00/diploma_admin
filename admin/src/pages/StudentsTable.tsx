@@ -9,7 +9,6 @@ import { ref, update } from "firebase/database";
 import {db} from "../firebase";
 import ImageComponent from '../components/additional/ImageComponent';
 import { onValue } from 'firebase/database'
-import { students } from '../helpers/studentList';
 import AddStudentModal from '../components/additional/AddStudentModal';
 import { AudioOutlined } from '@ant-design/icons';
 
@@ -50,7 +49,7 @@ import { AudioOutlined } from '@ant-design/icons';
     reader.onerror = (error) => reject(error);
   });
   
-  const Students: React.FC= () => {
+  const StudentsTable = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
@@ -290,15 +289,6 @@ import { AudioOutlined } from '@ant-design/icons';
 
 
         <Modal title="Basic Modal" open={isModalOpenEdit} onOk={handleOk} onCancel={handleCancel}>
-            {/* <Upload
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture-circle"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                >
-                {fileList.length >= 8 ? null : uploadButton}
-            </Upload> */}
             <ImageComponent filename= {filename!} />
             <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
                 <Form.Item label="First Name">
@@ -320,4 +310,4 @@ import { AudioOutlined } from '@ant-design/icons';
 }
 
  
-export default Students;
+export default StudentsTable;

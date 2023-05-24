@@ -1,7 +1,4 @@
-import Header from "../components/header/Header"
-
-import {students} from "./../helpers/studentList"
-import Student from '../components/student/Student'
+import StudentCard from '../components/student/StudentCard'
 import {db} from "../firebase";
 import { useState, useEffect } from 'react';
 import { ref, onValue } from "firebase/database";
@@ -40,7 +37,7 @@ const Monitoring = () => {
 				<ul className="projects">
 					{postData.map((postData) => {
 						return (
-							<Student
+							<StudentCard
 								key={postData.key}
 								firstname={postData.firstname}
 								lastname={postData.lastname}

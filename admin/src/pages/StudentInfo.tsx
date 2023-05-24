@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
-import {students} from "./../helpers/studentList"
+import {students} from "../helpers/studentList"
 
-const Project = () => {
+const StudentInfo = () => {
 	const {id}: any = useParams();
 	const student = students[id];
 
@@ -30,4 +30,4 @@ const Project = () => {
 	);
 }
 
-export default Project;
+export default StudentInfo;
