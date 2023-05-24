@@ -1,6 +1,6 @@
 import { Modal, Table } from 'antd';
 import React from 'react';
-import { Form, Button, Upload, Input } from 'antd';
+import { Form, Button, Upload, Input, Space } from 'antd';
 import { useState, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile, UploadProps } from 'antd/es/upload';
@@ -10,8 +10,13 @@ import {db} from "../firebase";
 import ImageComponent from '../components/additional/ImageComponent';
 import { onValue } from 'firebase/database'
 import AddStudentModal from '../components/additional/AddStudentModal';
+import { AudioOutlined } from '@ant-design/icons';
 
-  // const MyFormItemContext = React.createContext<(string | number)[]>([]);
+  const MyFormItemContext = React.createContext<(string | number)[]>([]);
+  const { Search } = Input;
+  const onSearch = (value: string) => console.log(value);
+
+  
 
   interface MyFormItemGroupProps {
     prefix: string | number | (string | number)[];
@@ -150,6 +155,8 @@ import AddStudentModal from '../components/additional/AddStudentModal';
     const [editedStudent, setEditedStudent] = useState<Item | null>(null);
     const filename = selectedStudent?.key.concat(".png")
 
+    
+
     const handleEdit = (student: Item) => {
       setSelectedStudent(student);
       setEditedStudent({ ...student });
@@ -233,11 +240,24 @@ import AddStudentModal from '../components/additional/AddStudentModal';
               },
           },
       ];  
+      const [searchText, setSearchText] = useState('');
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
+
+  const filteredData = postData.filter((item) =>
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
+
     return ( 
         <>
         {/* <Button type="primary" onClick={showModal}>Добавить студента
         </Button> */}
         {AddStudentModal && <AddStudentModal/>}
+        <Search placeholder="Enter some info about student" allowClear onSearch={onSearch} style={{ boxSizing: 'border-box', borderRadius: 0 }} value={searchText} onChange={handleSearch} />
         <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <Upload
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -265,6 +285,7 @@ import AddStudentModal from '../components/additional/AddStudentModal';
               </Button>
             </Form>
         </Modal>
+        
 
 
         <Modal title="Basic Modal" open={isModalOpenEdit} onOk={handleOk} onCancel={handleCancel}>
@@ -282,7 +303,7 @@ import AddStudentModal from '../components/additional/AddStudentModal';
               </Button>
             </Form>
         </Modal>
-        <Table dataSource={postData} columns={columns} />
+        <Table dataSource={filteredData} columns={columns} />
         
         </>
      );
