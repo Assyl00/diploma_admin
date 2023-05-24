@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { Modal, Form, Input, Button, Upload, UploadFile, Space } from 'antd';
-import { DatePicker } from 'antd';
+import { DatePicker, Select } from 'antd';
 import {db} from "../../firebase";
 import { ref, push } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
@@ -92,6 +92,17 @@ const AddStudentModal = () => {
 //     return null;
 //   };
 
+  const { Option } = Select;
+  const [prevSelectValue, setPrevSelectValue] = useState('');
+  const [showFit, setShowFit] = useState(false);
+
+  const handlePrevSelectChange = (value: SetStateAction<string>) => {
+    setPrevSelectValue(value);
+
+    // Set the condition based on the selected value
+    setShowFit(value === 'FIT');
+  };
+
   return (
     <>
       <Button type="primary" onClick={() => setVisible(true)} style={{ borderRadius: 0 }}>
@@ -137,7 +148,7 @@ const AddStudentModal = () => {
           <Form.Item
             name="middlename"
             label="Middle Name"
-            rules={[{ required: false, message: 'Please enter the last name' }]}
+            rules={[{ required: false, message: 'Please enter the middle name' }]}
           >
             <Input />
           </Form.Item>
@@ -146,19 +157,40 @@ const AddStudentModal = () => {
             label="Faculty"
             rules={[{ required: true, message: 'Please enter the faculty' }]}
           >
-            <Input />
+            {/* <Input /> */}
+            <Select onChange={handlePrevSelectChange}>
+              <Option value="FIT">FIT</Option>
+              <Option value="BS">BS</Option>
+            </Select>
           </Form.Item>
           <Form.Item
             name="major"
             label="Major"
-            rules={[{ required: true, message: 'Please enter the faculty' }]}
+            rules={[{ required: true, message: 'Please enter the major' }]}
           >
-            <Input />
+            {/* <Input /> */}
+            <Select defaultValue = " ">
+              {prevSelectValue === 'FIT' ? (
+                <>
+                  <Select.Option value="IS">IS</Select.Option>
+                  <Select.Option value="CSS">CSS</Select.Option>
+                </>
+              ): 
+              <>
+              {prevSelectValue === 'BS' && (
+                <>
+                <Select.Option value="Finance">Finance</Select.Option>
+                <Select.Option value="Marketing">Marketing</Select.Option>
+              </>
+              )}
+              </>
+              }
+            </Select>
           </Form.Item>
           <Form.Item
             name="starting_year"
             label="Starting year"
-            rules={[{ required: true, message: 'Please enter the faculty' }]}
+            rules={[{ required: true, message: 'Please enter the starting year of study' }]}
           >
             <Space direction="vertical" size={12}>
             {/* <RangePicker
@@ -174,7 +206,7 @@ const AddStudentModal = () => {
           <Form.Item
             name="year"
             label="Year"
-            rules={[{ required: true, message: 'Please enter the faculty' }]}
+            rules={[{ required: true, type: 'number',  message: 'Please enter the year of study' }]}
           >
             <Input />
           </Form.Item>
