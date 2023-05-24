@@ -94,7 +94,7 @@ const AddStudentModal = () => {
 
   return (
     <>
-      <Button type="primary" onClick={() => setVisible(true)}>
+      <Button type="primary" onClick={() => setVisible(true)} style={{ borderRadius: 0 }}>
         Add Student
       </Button>
       <Modal
