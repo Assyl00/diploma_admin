@@ -2,6 +2,7 @@ import StudentCard from '../components/student/StudentCard'
 import {db} from "../firebase";
 import { useState, useEffect } from 'react';
 import { ref, onValue } from "firebase/database";
+import moment from 'moment';
 
 interface Item {
 	key: string;
@@ -43,7 +44,7 @@ const Monitoring = () => {
 								lastname={postData.lastname}
 								id={postData.id}
 								enter_or_exit={postData.enter_or_exit}
-								enter_time={postData.enter_time}
+								enter_time={moment(postData.enter_time).format('DD.MM.YYYY' + ' ' + 'HH:mm')}
 							/>
 						)
 					})}
