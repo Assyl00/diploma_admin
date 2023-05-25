@@ -101,7 +101,19 @@ const AddStudentModal = () => {
     setPrevSelectValue(value);
 
     // Set the condition based on the selected value
-    setShowFit(value === 'FIT');
+    // setShowFit(value === 'FIT');
+  };
+
+  const generateIdNumber = (value: string) => {
+    const currentYear = new Date().getFullYear();
+    const lastTwoYearDigits = currentYear.toString().slice(-2);
+    const degreeInitial = value.charAt(0).toUpperCase();
+    const facultyCode = "01"; // Replace with your logic to get the code for the faculty
+    const majorCode = "02"; // Replace with your logic to get the code for the major
+    const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(2, "0");
+
+    const id = `${lastTwoYearDigits}${degreeInitial}${facultyCode}${majorCode}${randomNumbers}`;
+    return id;
   };
 
   return (
@@ -152,6 +164,18 @@ const AddStudentModal = () => {
             rules={[{ required: false, message: 'Please enter the middle name' }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="degree"
+            label="Degree"
+            rules={[{ required: true, message: 'Please enter the degree' }]}
+          >
+            {/* <Input /> */}
+            <Select onChange={handlePrevSelectChange}>
+              <Option value="Bachelor">Bachelor</Option>
+              <Option value="Master">Master</Option>
+              <Option value="PhD">PhD</Option>
+            </Select>
           </Form.Item>
           <Form.Item
             name="faculty"
