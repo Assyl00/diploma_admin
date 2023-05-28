@@ -2,7 +2,7 @@ import { SetStateAction, useState } from 'react';
 import { Modal, Form, Input, Button, Upload, UploadFile, Space } from 'antd';
 import { DatePicker, Select } from 'antd';
 import {db} from "../../firebase";
-import { ref, push } from "firebase/database";
+import { ref, push, set } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
 import moment, { Moment } from 'moment';
@@ -38,6 +38,27 @@ const AddStudentModal = () => {
     },
   ]);
 
+
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+
+  const handleDateChange = (date: Dayjs | null) => {
+    setSelectedDate(date);
+  };
+
+  const [selectedOption, setSelectedOption] = useState<string>('');
+
+
+  const handleSelectChange = (value: string | undefined) => {
+    setSelectedOption(value || '');
+  };
+  
+  const [selectedFacultyOption, setselectedFacultyOption] = useState<string>('');
+
+  const handleFacultySelectChange = (value: string) => {
+    handlePrevSelectChange(value);
+    setselectedFacultyOption(value);
+  };
+
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as RcFile);
@@ -65,7 +86,11 @@ const AddStudentModal = () => {
     try {
       // Add student to Firebase database
       const postsRef = ref(db, 'persons');
-      await push(postsRef, values);
+      const formattedValues = {
+        ...values,
+        starting_year: selectedDate?.year().toString(), // Используем selectedDate для получения значения года
+      };
+      await push(postsRef, formattedValues);
 
       // Reset form fields
       form.resetFields();
@@ -105,14 +130,14 @@ const AddStudentModal = () => {
   };
 
   const generateIdNumber = (value: string) => {
-    const currentYear = new Date().getFullYear();
-    const lastTwoYearDigits = currentYear.toString().slice(-2);
+    const currentYear = selectedDate?.format('YY');
+    // const lastTwoYearDigits = currentYear.toString().slice(-2);
     const degreeInitial = value.charAt(0).toUpperCase();
-    const facultyCode = "01"; // Replace with your logic to get the code for the faculty
-    const majorCode = "02"; // Replace with your logic to get the code for the major
-    const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(2, "0");
+    const facultyCode = selectedFacultyOption; // Replace with your logic to get the code for the faculty
+    // const majorCode = "02"; // Replace with your logic to get the code for the major
+    const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(4, "0");
 
-    const id = `${lastTwoYearDigits}${degreeInitial}${facultyCode}${majorCode}${randomNumbers}`;
+    const id = `${currentYear}${degreeInitial}${facultyCode}${randomNumbers}`;
     return id;
   };
 
@@ -165,13 +190,16 @@ const AddStudentModal = () => {
           >
             <Input />
           </Form.Item>
+          <Form.Item name="starting_year" label="Starting year">
+            <DatePicker value={selectedDate} onChange={handleDateChange} format={yearFormat} picker="year" />
+          </Form.Item>
           <Form.Item
             name="degree"
             label="Degree"
             rules={[{ required: true, message: 'Please enter the degree' }]}
           >
             {/* <Input /> */}
-            <Select onChange={handlePrevSelectChange}>
+            <Select defaultValue="B" onChange={handleSelectChange}>
               <Option value="Bachelor">Bachelor</Option>
               <Option value="Master">Master</Option>
               <Option value="PhD">PhD</Option>
@@ -183,9 +211,9 @@ const AddStudentModal = () => {
             rules={[{ required: true, message: 'Please enter the faculty' }]}
           >
             {/* <Input /> */}
-            <Select onChange={handlePrevSelectChange}>
-              <Option value="FIT">FIT</Option>
-              <Option value="BS">BS</Option>
+            <Select onChange={handleFacultySelectChange}>
+              <Option value="01">FIT</Option>
+              <Option value="02">BS</Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -195,14 +223,14 @@ const AddStudentModal = () => {
           >
             {/* <Input /> */}
             <Select defaultValue = " ">
-              {prevSelectValue === 'FIT' ? (
+              {prevSelectValue === '01' ? (
                 <>
                   <Select.Option value="IS">IS</Select.Option>
                   <Select.Option value="CSS">CSS</Select.Option>
                 </>
               ): 
               <>
-              {prevSelectValue === 'BS' && (
+              {prevSelectValue === '02' && (
                 <>
                 <Select.Option value="Finance">Finance</Select.Option>
                 <Select.Option value="Marketing">Marketing</Select.Option>
@@ -212,10 +240,10 @@ const AddStudentModal = () => {
               }
             </Select>
           </Form.Item>
-          <Form.Item label="Starting year">
-            <DatePicker format={yearFormat} picker="year"/>
-          </Form.Item>
         </Form>
+        <p>{selectedDate ? selectedDate.format('YY') : 'Нет даты'}</p>
+        <p>{generateIdNumber(selectedOption)}</p>
+        <p>Выбранное значение Select 2: {selectedFacultyOption}</p>
       </Modal>
     </>
   );
