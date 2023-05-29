@@ -1,10 +1,17 @@
 import { SetStateAction, useState } from 'react';
-import { Modal, Form, Input, Button, Upload, UploadFile, Space } from 'antd';
+import { Modal, Form, Input, Button, Upload, UploadFile } from 'antd';
 import { DatePicker, Select } from 'antd';
 import {db} from "../../firebase";
-import { ref, push } from "firebase/database";
+import { ref, set } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
+<<<<<<< HEAD
+=======
+import moment, { Moment } from 'moment';
+import dayjs, { Dayjs } from 'dayjs';
+import { storageRef } from "../../firebase";
+import "./style.css";
+>>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -25,7 +32,7 @@ const AddStudentModal = () => {
       uid: '-1',
       name: 'image.png',
       status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
     },
     {
       uid: '-5',
@@ -34,6 +41,7 @@ const AddStudentModal = () => {
     },
   ]);
 
+<<<<<<< HEAD
   interface Item {
     key: string;
     firstname: string;
@@ -88,6 +96,28 @@ const AddStudentModal = () => {
     //     // Reset other fields here
     //   });
     // };
+=======
+
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+
+  const handleDateChange = (date: Dayjs | null) => {
+    setSelectedDate(date);
+  };
+
+  const [selectedOption, setSelectedOption] = useState<string>('');
+
+
+  const handleSelectChange = (value: string | undefined) => {
+    setSelectedOption(value || '');
+  };
+  
+  const [selectedFacultyOption, setselectedFacultyOption] = useState<string>('');
+
+  const handleFacultySelectChange = (value: string) => {
+    handlePrevSelectChange(value);
+    setselectedFacultyOption(value);
+  };
+>>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -114,14 +144,20 @@ const AddStudentModal = () => {
 
   const handleAddStudent = async (values: any) => {
     try {
-      // Add student to Firebase database
-      const postsRef = ref(db, 'persons');
-      await push(postsRef, values);
+      // const db = getDatabase();
+      const customId = generateIdNumber(selectedOption);
 
-      // Reset form fields
+      const newPersonRef = ref(db, 'persons/' + customId);
+
+      const formattedData = {
+        id: customId,
+        ...values,
+        starting_year: selectedDate?.year().toString(),
+      };
+      await set(newPersonRef, formattedData);
+
       form.resetFields();
 
-      // Close the modal
       setVisible(false);
     } catch (error) {
       console.log('Error adding student:', error);
@@ -146,14 +182,12 @@ const AddStudentModal = () => {
   };
 
   const generateIdNumber = (value: string) => {
-    const currentYear = new Date().getFullYear();
-    const lastTwoYearDigits = currentYear.toString().slice(-2);
+    const currentYear = selectedDate?.format('YY');
     const degreeInitial = value.charAt(0).toUpperCase();
-    const facultyCode = "01"; // Replace with your logic to get the code for the faculty
-    const majorCode = "02"; // Replace with your logic to get the code for the major
-    const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(2, "0");
+    const facultyCode = selectedFacultyOption;
+    const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(4, "0");
 
-    const id = `${lastTwoYearDigits}${degreeInitial}${facultyCode}${majorCode}${randomNumbers}`;
+    const id = `${currentYear}${degreeInitial}${facultyCode}${randomNumbers}`;
     return id;
   };
 
@@ -176,7 +210,7 @@ const AddStudentModal = () => {
         ]}
       >
         <Upload
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                action={storageRef.child('19B030067').toString()}
                 listType="picture-circle"
                 // fileList={fileList}
                 onPreview={handlePreview}
@@ -184,7 +218,7 @@ const AddStudentModal = () => {
                 >
                 {fileList.length >= 8 ? null : uploadButton}
             </Upload>
-        <Form form={form} onFinish={handleAddStudent}>
+        <Form layout="vertical" form={form} onFinish={handleAddStudent} >
           <Form.Item
             name="firstname"
             label="First Name"
@@ -208,11 +242,25 @@ const AddStudentModal = () => {
             <Input  />
           </Form.Item>
           <Form.Item
+            name="sex"
+            label="Sex"
+            rules={[{ required: true, message: 'Please enter the sex' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item name="starting_year" label="Starting year">
+            <DatePicker style={{ width: '100%' }} value={selectedDate} onChange={handleDateChange} format={yearFormat} picker="year" />
+          </Form.Item>
+          <Form.Item 
             name="degree"
             label="Degree"
             rules={[{ required: true, message: 'Please enter the degree' }]}
           >
+<<<<<<< HEAD
             <Select onChange={handlePrevSelectChange} >
+=======
+            <Select onChange={handleSelectChange}>
+>>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
               <Option value="Bachelor">Bachelor</Option>
               <Option value="Master">Master</Option>
               <Option value="PhD">PhD</Option>
@@ -223,9 +271,15 @@ const AddStudentModal = () => {
             label="Faculty"
             rules={[{ required: true, message: 'Please enter the faculty' }]}
           >
+<<<<<<< HEAD
             <Select onChange={handlePrevSelectChange}>
               <Option value="FIT">FIT</Option>
               <Option value="BS">BS</Option>
+=======
+            <Select onChange={handleFacultySelectChange}>
+              <Option value="01">FIT</Option>
+              <Option value="02">BS</Option>
+>>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
             </Select>
           </Form.Item>
           <Form.Item
@@ -233,15 +287,20 @@ const AddStudentModal = () => {
             label="Major"
             rules={[{ required: true, message: 'Please enter the major' }]}
           >
+<<<<<<< HEAD
             <Select defaultValue = " ">
               {prevSelectValue === 'FIT' ? (
+=======
+            <Select>
+              {prevSelectValue === '01' ? (
+>>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
                 <>
                   <Select.Option value="IS">IS</Select.Option>
                   <Select.Option value="CSS">CSS</Select.Option>
                 </>
               ): 
               <>
-              {prevSelectValue === 'BS' && (
+              {prevSelectValue === '02' && (
                 <>
                 <Select.Option value="Finance">Finance</Select.Option>
                 <Select.Option value="Marketing">Marketing</Select.Option>
@@ -251,10 +310,10 @@ const AddStudentModal = () => {
               }
             </Select>
           </Form.Item>
-          <Form.Item label="Starting year">
-            <DatePicker format={yearFormat} picker="year"/>
-          </Form.Item>
         </Form>
+        <p>{selectedDate ? selectedDate.format('YY') : 'Нет даты'}</p>
+        <p>{generateIdNumber(selectedOption)}</p>
+        <p>Выбранное значение Select 2: {selectedFacultyOption}</p>
       </Modal>
     </>
   );
