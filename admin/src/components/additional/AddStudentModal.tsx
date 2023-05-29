@@ -1,13 +1,14 @@
 import { SetStateAction, useState } from 'react';
-import { Modal, Form, Input, Button, Upload, UploadFile, Space } from 'antd';
+import { Modal, Form, Input, Button, Upload, UploadFile } from 'antd';
 import { DatePicker, Select } from 'antd';
 import {db} from "../../firebase";
-import { ref, push, set, getDatabase } from "firebase/database";
+import { ref, set } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
 import moment, { Moment } from 'moment';
 import dayjs, { Dayjs } from 'dayjs';
-import { PickerProps } from 'antd/lib/date-picker/generatePicker';
+import { storageRef } from "../../firebase";
+import "./style.css";
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -28,7 +29,7 @@ const AddStudentModal = () => {
       uid: '-1',
       name: 'image.png',
       status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
     },
     {
       uid: '-5',
@@ -83,22 +84,20 @@ const AddStudentModal = () => {
 
   const handleAddStudent = async (values: any) => {
     try {
-      const db = getDatabase(); // Получаем экземпляр базы данных Firebase
-      const customId = generateIdNumber(selectedOption); // Здесь вы используете ваш собственный ID
+      // const db = getDatabase();
+      const customId = generateIdNumber(selectedOption);
 
       const newPersonRef = ref(db, 'persons/' + customId);
-      
+
       const formattedData = {
-        id: customId, // Используйте ваш собственный ID
+        id: customId,
         ...values,
         starting_year: selectedDate?.year().toString(),
       };
       await set(newPersonRef, formattedData);
 
-      // Reset form fields
       form.resetFields();
 
-      // Close the modal
       setVisible(false);
     } catch (error) {
       console.log('Error adding student:', error);
@@ -145,7 +144,7 @@ const AddStudentModal = () => {
         ]}
       >
         <Upload
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                action={storageRef.child('19B030067').toString()}
                 listType="picture-circle"
                 // fileList={fileList}
                 onPreview={handlePreview}
@@ -153,7 +152,7 @@ const AddStudentModal = () => {
                 >
                 {fileList.length >= 8 ? null : uploadButton}
             </Upload>
-        <Form form={form} onFinish={handleAddStudent}>
+        <Form layout="vertical" form={form} onFinish={handleAddStudent} >
           <Form.Item
             name="firstname"
             label="First Name"
@@ -175,16 +174,22 @@ const AddStudentModal = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item name="starting_year" label="Starting year">
-            <DatePicker value={selectedDate} onChange={handleDateChange} format={yearFormat} picker="year" />
-          </Form.Item>
           <Form.Item
+            name="sex"
+            label="Sex"
+            rules={[{ required: true, message: 'Please enter the sex' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item name="starting_year" label="Starting year">
+            <DatePicker style={{ width: '100%' }} value={selectedDate} onChange={handleDateChange} format={yearFormat} picker="year" />
+          </Form.Item>
+          <Form.Item 
             name="degree"
             label="Degree"
             rules={[{ required: true, message: 'Please enter the degree' }]}
           >
-            {/* <Input /> */}
-            <Select defaultValue="B" onChange={handleSelectChange}>
+            <Select onChange={handleSelectChange}>
               <Option value="Bachelor">Bachelor</Option>
               <Option value="Master">Master</Option>
               <Option value="PhD">PhD</Option>
@@ -195,7 +200,6 @@ const AddStudentModal = () => {
             label="Faculty"
             rules={[{ required: true, message: 'Please enter the faculty' }]}
           >
-            {/* <Input /> */}
             <Select onChange={handleFacultySelectChange}>
               <Option value="01">FIT</Option>
               <Option value="02">BS</Option>
@@ -206,8 +210,7 @@ const AddStudentModal = () => {
             label="Major"
             rules={[{ required: true, message: 'Please enter the major' }]}
           >
-            {/* <Input /> */}
-            <Select defaultValue = " ">
+            <Select>
               {prevSelectValue === '01' ? (
                 <>
                   <Select.Option value="IS">IS</Select.Option>
