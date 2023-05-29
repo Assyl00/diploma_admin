@@ -5,13 +5,10 @@ import {db} from "../../firebase";
 import { ref, set } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
-<<<<<<< HEAD
-=======
 import moment, { Moment } from 'moment';
 import dayjs, { Dayjs } from 'dayjs';
 import { storageRef } from "../../firebase";
 import "./style.css";
->>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -41,62 +38,6 @@ const AddStudentModal = () => {
     },
   ]);
 
-<<<<<<< HEAD
-  interface Item {
-    key: string;
-    firstname: string;
-    lastname: string;
-    middlename: string;
-    degree: string;
-    faculty: string;
-    major: string;
-    starting_year: number;
-  }
-
-  const StudentForm = () => {
-    const [formData, setFormData] = useState<Item>({
-      key: '',
-      firstname: '',
-      lastname: '',
-      middlename: '',
-      degree: '',
-      faculty: '',
-      major: '',
-      starting_year: 0,
-      // Initialize other fields here
-    });
-  }
-  
-    // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    //   const { name, value } = e.target;
-    //   setFormData((prevData) => ({
-    //     ...prevData,
-    //     [name]: value,
-    //   }));
-    // };
-  
-    // const handleSubmit = (event: React.FormEvent) => {
-    //   event.preventDefault();
-  
-    //   const newStudent: Item = formData;
-  
-    //   // Save the new student to Firebase
-    //   push(ref(db, 'students'), newStudent);
-  
-    //   // Clear the form inputs
-    //   setFormData({
-    //     key: '',
-    //     firstname: '',
-    //     lastname: '',
-    //     middlename: '',
-    //     degree: '',
-    //     faculty: '',
-    //     major: '',
-    //     starting_year: 0,
-    //     // Reset other fields here
-    //   });
-    // };
-=======
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
@@ -117,7 +58,6 @@ const AddStudentModal = () => {
     handlePrevSelectChange(value);
     setselectedFacultyOption(value);
   };
->>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -256,11 +196,7 @@ const AddStudentModal = () => {
             label="Degree"
             rules={[{ required: true, message: 'Please enter the degree' }]}
           >
-<<<<<<< HEAD
-            <Select onChange={handlePrevSelectChange} >
-=======
             <Select onChange={handleSelectChange}>
->>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
               <Option value="Bachelor">Bachelor</Option>
               <Option value="Master">Master</Option>
               <Option value="PhD">PhD</Option>
@@ -271,15 +207,9 @@ const AddStudentModal = () => {
             label="Faculty"
             rules={[{ required: true, message: 'Please enter the faculty' }]}
           >
-<<<<<<< HEAD
-            <Select onChange={handlePrevSelectChange}>
-              <Option value="FIT">FIT</Option>
-              <Option value="BS">BS</Option>
-=======
             <Select onChange={handleFacultySelectChange}>
               <Option value="01">FIT</Option>
               <Option value="02">BS</Option>
->>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
             </Select>
           </Form.Item>
           <Form.Item
@@ -287,13 +217,8 @@ const AddStudentModal = () => {
             label="Major"
             rules={[{ required: true, message: 'Please enter the major' }]}
           >
-<<<<<<< HEAD
-            <Select defaultValue = " ">
-              {prevSelectValue === 'FIT' ? (
-=======
             <Select>
               {prevSelectValue === '01' ? (
->>>>>>> 61ab21c0aeed1a3c192c87bd19debeecf77dab70
                 <>
                   <Select.Option value="IS">IS</Select.Option>
                   <Select.Option value="CSS">CSS</Select.Option>
