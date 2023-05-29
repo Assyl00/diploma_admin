@@ -214,12 +214,22 @@ import '../components/student/style.css'
     
     const columns = [
         {
-          title: 'ФИО',
+          title: 'Имя',
           dataIndex: 'firstname', 
           key: 'firstname',
         },
         {
-          title: 'Факультет, специальность',
+          title: 'Фамилия',
+          dataIndex: 'lastname', 
+          key: 'lastname',
+        },
+        // {
+        //   title: 'Факультет',
+        //   dataIndex: 'faculty',
+        //   key: 'faculty',
+        // },
+        {
+          title: 'Специальность',
           dataIndex: 'major',
           key: 'major',
         },

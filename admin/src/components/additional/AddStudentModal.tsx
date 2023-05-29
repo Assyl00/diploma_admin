@@ -206,8 +206,8 @@ const AddStudentModal = () => {
             rules={[{ required: true, message: 'Please enter the sex' }]}
           >
             <Select>
-              <Option value="M">M</Option>
-              <Option value="F">F</Option>
+              <Option value="M">Male</Option>
+              <Option value="F">Female</Option>
             </Select>
           </Form.Item>
           <Form.Item name="starting_year" label="Starting year">
