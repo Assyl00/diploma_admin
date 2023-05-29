@@ -58,6 +58,18 @@ const AddStudentModal = () => {
     handlePrevSelectChange(value);
     setselectedFacultyOption(value);
   };
+  const handleUpload = async (file: File | undefined) => {
+    if(file) {
+      try {
+        const storageReference = storageRef.child(generateIdNumber(selectedOption));
+        const snapshot = await storageReference.put(file);
+        console.log('Image uploaded successfully!');
+        // Другие действия после успешной загрузки...
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+  }
+  };
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -148,7 +160,14 @@ const AddStudentModal = () => {
                 listType="picture-circle"
                 // fileList={fileList}
                 onPreview={handlePreview}
-                onChange={handleChange}
+                // onChange={handleChange}
+                beforeUpload={() => false} // Disable automatic upload
+                onChange={(info) => {
+                  const file = info.file?.originFileObj; // Use optional chaining (?.)
+                  if (file && info.file.status === 'done') {
+                    handleUpload(file);
+                  }
+                }}
                 >
                 {fileList.length >= 8 ? null : uploadButton}
             </Upload>
@@ -179,7 +198,10 @@ const AddStudentModal = () => {
             label="Sex"
             rules={[{ required: true, message: 'Please enter the sex' }]}
           >
-            <Input />
+            <Select>
+              <Option value="M">M</Option>
+              <Option value="F">F</Option>
+            </Select>
           </Form.Item>
           <Form.Item name="starting_year" label="Starting year">
             <DatePicker style={{ width: '100%' }} value={selectedDate} onChange={handleDateChange} format={yearFormat} picker="year" />
