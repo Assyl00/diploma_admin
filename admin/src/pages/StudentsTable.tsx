@@ -282,7 +282,7 @@ import '../components/student/style.css'
                   label="Degree"
                   rules={[{ required: true, message: 'Please enter the degree' }]}
                 >
-                  <Select onChange={handlePrevSelectChange} defaultValue = {editedStudent?.degree}>
+                  <Select onChange={handlePrevSelectChange} defaultValue = {editedStudent?.degree} disabled>
                     <Option value="Bachelor">Bachelor</Option>
                     <Option value="Master">Master</Option>
                     <Option value="PhD">PhD</Option>
@@ -293,7 +293,7 @@ import '../components/student/style.css'
                   label="Faculty"
                   rules={[{ required: true, message: 'Please enter the faculty' }]}
                 >
-                  <Select onChange={handlePrevSelectChange} defaultValue = {editedStudent?.faculty}>
+                  <Select onChange={handlePrevSelectChange} defaultValue = {editedStudent?.faculty} disabled>
                     <Option value="FIT">FIT</Option>
                     <Option value="BS">BS</Option>
                   </Select>
@@ -303,7 +303,7 @@ import '../components/student/style.css'
                   label="Major"
                   rules={[{ required: true, message: 'Please enter the major' }]}
                 >
-                  <Select defaultValue = {editedStudent?.major}>
+                  <Select defaultValue = {editedStudent?.major} disabled>
                     {prevSelectValue === 'FIT' ? (
                       <>
                         <Select.Option value="IS">IS</Select.Option>
