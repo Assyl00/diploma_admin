@@ -120,7 +120,13 @@ const AddStudentModal = () => {
   const [prevSelectValue, setPrevSelectValue] = useState('');
   const [showFit, setShowFit] = useState(false);
 
-  const handlePrevSelectChange = (value: SetStateAction<string>) => {
+  const handlePrevSelectChange = (value: string) => {
+    // const { name, value } = e.target;
+    // setFormData((prevData) => ({
+    //   ...prevData,
+    //   [name]: value,
+    // }));
+    
     setPrevSelectValue(value);
 
     // Set the condition based on the selected value
@@ -176,6 +182,7 @@ const AddStudentModal = () => {
             name="firstname"
             label="First Name"
             rules={[{ required: true, message: 'Please enter the first name' }]}
+            
           >
             <Input />
           </Form.Item>
@@ -184,14 +191,14 @@ const AddStudentModal = () => {
             label="Last Name"
             rules={[{ required: true, message: 'Please enter the last name' }]}
           >
-            <Input />
+            <Input  />
           </Form.Item>
           <Form.Item
             name="middlename"
             label="Middle Name"
             rules={[{ required: false, message: 'Please enter the middle name' }]}
           >
-            <Input />
+            <Input  />
           </Form.Item>
           <Form.Item
             name="sex"
@@ -257,6 +264,6 @@ const AddStudentModal = () => {
       </Modal>
     </>
   );
-};
+}
 
 export default AddStudentModal;

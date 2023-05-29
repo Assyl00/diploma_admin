@@ -31,7 +31,6 @@ const StudentCard = ({key, firstname, lastname, id, enter_or_exit, enter_time}: 
     }, []);
 
 	return (
-		// <NavLink to={`/sessions/${key}`}>
 			<li className="student">
 				<ImageComponent filename= {id! + '.png'} />
 				<div className='student__card'>
@@ -42,7 +41,6 @@ const StudentCard = ({key, firstname, lastname, id, enter_or_exit, enter_time}: 
 					<p>{enter_time}</p>
 				</div>
 			</li>
-		// </NavLink>
 	);
 };
 
