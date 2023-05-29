@@ -5,9 +5,6 @@ import {db} from "../../firebase";
 import { ref, push } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
-import moment, { Moment } from 'moment';
-import dayjs, { Dayjs } from 'dayjs';
-import { PickerProps } from 'antd/lib/date-picker/generatePicker';
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -17,7 +14,6 @@ const getBase64 = (file: RcFile): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const { RangePicker } = DatePicker;
 const yearFormat = 'YYYY';
 
 const AddStudentModal = () => {
@@ -37,6 +33,61 @@ const AddStudentModal = () => {
       status: 'error',
     },
   ]);
+
+  interface Item {
+    key: string;
+    firstname: string;
+    lastname: string;
+    middlename: string;
+    degree: string;
+    faculty: string;
+    major: string;
+    starting_year: number;
+  }
+
+  const StudentForm = () => {
+    const [formData, setFormData] = useState<Item>({
+      key: '',
+      firstname: '',
+      lastname: '',
+      middlename: '',
+      degree: '',
+      faculty: '',
+      major: '',
+      starting_year: 0,
+      // Initialize other fields here
+    });
+  }
+  
+    // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    //   const { name, value } = e.target;
+    //   setFormData((prevData) => ({
+    //     ...prevData,
+    //     [name]: value,
+    //   }));
+    // };
+  
+    // const handleSubmit = (event: React.FormEvent) => {
+    //   event.preventDefault();
+  
+    //   const newStudent: Item = formData;
+  
+    //   // Save the new student to Firebase
+    //   push(ref(db, 'students'), newStudent);
+  
+    //   // Clear the form inputs
+    //   setFormData({
+    //     key: '',
+    //     firstname: '',
+    //     lastname: '',
+    //     middlename: '',
+    //     degree: '',
+    //     faculty: '',
+    //     major: '',
+    //     starting_year: 0,
+    //     // Reset other fields here
+    //   });
+    // };
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -77,27 +128,17 @@ const AddStudentModal = () => {
     }
   };
 
-//   const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
-
-//   const handleDateChange = (dates: Moment[] | null) => {
-//     setSelectedDate(dates);
-//   };
-
-//   const getDefaultDates = (): Dayjs[] | null => {
-//     if (selectedDate) {
-//       return [
-//         moment(selectedDate[0]).add(4, 'years').toDayjs(),
-//         moment(selectedDate[1]).add(4, 'years').toDayjs()
-//       ];
-//     }
-//     return null;
-//   };
-
   const { Option } = Select;
   const [prevSelectValue, setPrevSelectValue] = useState('');
   const [showFit, setShowFit] = useState(false);
 
-  const handlePrevSelectChange = (value: SetStateAction<string>) => {
+  const handlePrevSelectChange = (value: string) => {
+    // const { name, value } = e.target;
+    // setFormData((prevData) => ({
+    //   ...prevData,
+    //   [name]: value,
+    // }));
+    
     setPrevSelectValue(value);
 
     // Set the condition based on the selected value
@@ -148,6 +189,7 @@ const AddStudentModal = () => {
             name="firstname"
             label="First Name"
             rules={[{ required: true, message: 'Please enter the first name' }]}
+            
           >
             <Input />
           </Form.Item>
@@ -156,22 +198,21 @@ const AddStudentModal = () => {
             label="Last Name"
             rules={[{ required: true, message: 'Please enter the last name' }]}
           >
-            <Input />
+            <Input  />
           </Form.Item>
           <Form.Item
             name="middlename"
             label="Middle Name"
             rules={[{ required: false, message: 'Please enter the middle name' }]}
           >
-            <Input />
+            <Input  />
           </Form.Item>
           <Form.Item
             name="degree"
             label="Degree"
             rules={[{ required: true, message: 'Please enter the degree' }]}
           >
-            {/* <Input /> */}
-            <Select onChange={handlePrevSelectChange}>
+            <Select onChange={handlePrevSelectChange} >
               <Option value="Bachelor">Bachelor</Option>
               <Option value="Master">Master</Option>
               <Option value="PhD">PhD</Option>
@@ -182,7 +223,6 @@ const AddStudentModal = () => {
             label="Faculty"
             rules={[{ required: true, message: 'Please enter the faculty' }]}
           >
-            {/* <Input /> */}
             <Select onChange={handlePrevSelectChange}>
               <Option value="FIT">FIT</Option>
               <Option value="BS">BS</Option>
@@ -193,7 +233,6 @@ const AddStudentModal = () => {
             label="Major"
             rules={[{ required: true, message: 'Please enter the major' }]}
           >
-            {/* <Input /> */}
             <Select defaultValue = " ">
               {prevSelectValue === 'FIT' ? (
                 <>
@@ -219,6 +258,6 @@ const AddStudentModal = () => {
       </Modal>
     </>
   );
-};
+}
 
 export default AddStudentModal;

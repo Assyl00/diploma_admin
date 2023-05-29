@@ -1,4 +1,4 @@
-import { Modal, Table } from 'antd';
+import { Modal, Select, Table } from 'antd';
 import React from 'react';
 import { Form, Button, Upload, Input, Space } from 'antd';
 import { useState, useEffect } from 'react';
@@ -10,7 +10,7 @@ import {db} from "../firebase";
 import ImageComponent from '../components/additional/ImageComponent';
 import { onValue } from 'firebase/database'
 import AddStudentModal from '../components/additional/AddStudentModal';
-import { AudioOutlined } from '@ant-design/icons';
+import '../components/student/style.css'
 
   const MyFormItemContext = React.createContext<(string | number)[]>([]);
   const { Search } = Input;
@@ -128,10 +128,10 @@ import { AudioOutlined } from '@ant-design/icons';
       firstname: string;
       lastname: string;
       middlename: string;
+      degree: string;
       faculty: string;
       major: string;
       starting_year: number;
-      year: number;
     }
 
     const [postData, setPostData] = useState<Item[]>([]);
@@ -191,10 +191,10 @@ import { AudioOutlined } from '@ant-design/icons';
         faculty: editedStudent.faculty,
         firstname: editedStudent.firstname,
         lastname: editedStudent.lastname,
+        degree: editedStudent.degree,
         major: editedStudent.major,
         middlename: editedStudent.middlename,
         starting_year: editedStudent.starting_year,
-        year: editedStudent.year,
       };
 
       //save object to Realtime Database
@@ -252,44 +252,21 @@ import { AudioOutlined } from '@ant-design/icons';
     )
   );
 
-    return ( 
+  const { Option } = Select;
+  const [prevSelectValue, setPrevSelectValue] = useState('');
+  // const [showFit, setShowFit] = useState(false);
+
+  const handlePrevSelectChange = (value: string) => {
+    setPrevSelectValue(value);
+  };
+
+  return ( 
         <>
-        {/* <Button type="primary" onClick={showModal}>Добавить студента
-        </Button> */}
         {AddStudentModal && <AddStudentModal/>}
         <Search placeholder="Enter some info about student" allowClear onSearch={onSearch} style={{ boxSizing: 'border-box', borderRadius: 0 }} value={searchText} onChange={handleSearch} />
-        <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-            <Upload
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture-circle"
-                // fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                >
-                {fileList.length >= 8 ? null : uploadButton}
-            </Upload>
-            {/* <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                
-                
-            </Modal> */}
-            <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
-                <Form.Item label="First Name">
-                  <Input name = "firstname" onChange={handleInputChange}/>
-                </Form.Item>
-                <Form.Item label="Last Name">
-                  <Input name = "lastname" onChange={handleInputChange}/>
-                </Form.Item>
 
-              <Button type="primary" htmlType="submit" onClick={handleSave}>
-                Submit
-              </Button>
-            </Form>
-        </Modal>
-        
-
-
-        <Modal title="Basic Modal" open={isModalOpenEdit} onOk={handleOk} onCancel={handleCancel}>
-            <ImageComponent filename= {filename!} />
+        <Modal title="Edit Student" open={isModalOpenEdit}  onCancel={handleCancel} footer={null}>
+            <ImageComponent filename= {filename!}/>
             <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
                 <Form.Item label="First Name">
                   <Input name = "firstname" value={editedStudent?.firstname} onChange={handleInputChange}/>
@@ -297,17 +274,65 @@ import { AudioOutlined } from '@ant-design/icons';
                 <Form.Item label="Last Name">
                   <Input name = "lastname" value={editedStudent?.lastname} onChange={handleInputChange}/>
                 </Form.Item>
+                <Form.Item label="Middle Name">
+                  <Input name = "middlename" value={editedStudent?.middlename} onChange={handleInputChange}/>
+                </Form.Item>
+                <Form.Item
+                  name="degree"
+                  label="Degree"
+                  rules={[{ required: true, message: 'Please enter the degree' }]}
+                >
+                  <Select onChange={handlePrevSelectChange} defaultValue = {editedStudent?.degree}>
+                    <Option value="Bachelor">Bachelor</Option>
+                    <Option value="Master">Master</Option>
+                    <Option value="PhD">PhD</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  name="faculty"
+                  label="Faculty"
+                  rules={[{ required: true, message: 'Please enter the faculty' }]}
+                >
+                  <Select onChange={handlePrevSelectChange} defaultValue = {editedStudent?.faculty}>
+                    <Option value="FIT">FIT</Option>
+                    <Option value="BS">BS</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  name="major"
+                  label="Major"
+                  rules={[{ required: true, message: 'Please enter the major' }]}
+                >
+                  <Select defaultValue = {editedStudent?.major}>
+                    {prevSelectValue === 'FIT' ? (
+                      <>
+                        <Select.Option value="IS">IS</Select.Option>
+                        <Select.Option value="CSS">CSS</Select.Option>
+                      </>
+                    ): 
+                    <>
+                    {prevSelectValue === 'BS' && (
+                      <>
+                      <Select.Option value="Finance">Finance</Select.Option>
+                      <Select.Option value="Marketing">Marketing</Select.Option>
+                    </>
+                    )}
+                    </>
+                    }
+                  </Select>
+                </Form.Item>
+                <Form.Item label="ID">
+                  <Input name = "id" value={editedStudent?.key} onChange={handleInputChange} disabled/>
+                </Form.Item>
 
-              <Button type="primary" htmlType="submit" onClick={handleSave}>
+              <Button type="primary" htmlType="submit" onClick={handleSave} >
                 Submit
               </Button>
             </Form>
         </Modal>
         <Table dataSource={filteredData} columns={columns} />
-        
         </>
      );
 }
 
- 
 export default StudentsTable;
