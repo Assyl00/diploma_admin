@@ -2,7 +2,7 @@ import { SetStateAction, useState } from 'react';
 import { Modal, Form, Input, Button, Upload, UploadFile, Space } from 'antd';
 import { DatePicker, Select } from 'antd';
 import {db} from "../../firebase";
-import { ref, push, set } from "firebase/database";
+import { ref, push, set, getDatabase } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
 import moment, { Moment } from 'moment';
@@ -17,7 +17,6 @@ const getBase64 = (file: RcFile): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const { RangePicker } = DatePicker;
 const yearFormat = 'YYYY';
 
 const AddStudentModal = () => {
@@ -84,13 +83,17 @@ const AddStudentModal = () => {
 
   const handleAddStudent = async (values: any) => {
     try {
-      // Add student to Firebase database
-      const postsRef = ref(db, 'persons');
-      const formattedValues = {
+      const db = getDatabase(); // Получаем экземпляр базы данных Firebase
+      const customId = generateIdNumber(selectedOption); // Здесь вы используете ваш собственный ID
+
+      const newPersonRef = ref(db, 'persons/' + customId);
+      
+      const formattedData = {
+        id: customId, // Используйте ваш собственный ID
         ...values,
-        starting_year: selectedDate?.year().toString(), // Используем selectedDate для получения значения года
+        starting_year: selectedDate?.year().toString(),
       };
-      await push(postsRef, formattedValues);
+      await set(newPersonRef, formattedData);
 
       // Reset form fields
       form.resetFields();
@@ -101,22 +104,6 @@ const AddStudentModal = () => {
       console.log('Error adding student:', error);
     }
   };
-
-//   const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
-
-//   const handleDateChange = (dates: Moment[] | null) => {
-//     setSelectedDate(dates);
-//   };
-
-//   const getDefaultDates = (): Dayjs[] | null => {
-//     if (selectedDate) {
-//       return [
-//         moment(selectedDate[0]).add(4, 'years').toDayjs(),
-//         moment(selectedDate[1]).add(4, 'years').toDayjs()
-//       ];
-//     }
-//     return null;
-//   };
 
   const { Option } = Select;
   const [prevSelectValue, setPrevSelectValue] = useState('');
@@ -131,10 +118,8 @@ const AddStudentModal = () => {
 
   const generateIdNumber = (value: string) => {
     const currentYear = selectedDate?.format('YY');
-    // const lastTwoYearDigits = currentYear.toString().slice(-2);
     const degreeInitial = value.charAt(0).toUpperCase();
-    const facultyCode = selectedFacultyOption; // Replace with your logic to get the code for the faculty
-    // const majorCode = "02"; // Replace with your logic to get the code for the major
+    const facultyCode = selectedFacultyOption;
     const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(4, "0");
 
     const id = `${currentYear}${degreeInitial}${facultyCode}${randomNumbers}`;
