@@ -1,13 +1,13 @@
-import { SetStateAction, useState } from 'react';
-import { Modal, Form, Input, Button, Upload, UploadFile } from 'antd';
+import { ChangeEvent, SetStateAction, useState } from 'react';
+import { Modal, Form, Input, Button, Upload, UploadFile, message } from 'antd';
 import { DatePicker, Select } from 'antd';
-import {db} from "../../firebase";
-import { ref, set } from "firebase/database";
+import {db, storage} from "../../firebase";
+import { child, ref, set } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
 import moment, { Moment } from 'moment';
 import dayjs, { Dayjs } from 'dayjs';
-import { storageRef } from "../../firebase";
+import { ref as storageRef, uploadBytes } from "firebase/storage";
 import "./style.css";
 
 const getBase64 = (file: RcFile): Promise<string> =>
@@ -58,18 +58,18 @@ const AddStudentModal = () => {
     handlePrevSelectChange(value);
     setselectedFacultyOption(value);
   };
-  const handleUpload = async (file: File | undefined) => {
-    if(file) {
-      try {
-        const storageReference = storageRef.child(generateIdNumber(selectedOption));
-        const snapshot = await storageReference.put(file);
-        console.log('Image uploaded successfully!');
-        // Другие действия после успешной загрузки...
-      } catch (error) {
-        console.error('Error uploading image:', error);
-      }
-  }
-  };
+  // const handleUpload = async (file: File | undefined) => {
+  //   if(file) {
+  //     try {
+  //       const storageReference = storageRef.child(generateIdNumber(selectedOption));
+  //       const snapshot = await storageReference.put(file);
+  //       console.log('Image uploaded successfully!');
+  //       // Другие действия после успешной загрузки...
+  //     } catch (error) {
+  //       console.error('Error uploading image:', error);
+  //     }
+  // }
+  // };
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -133,6 +133,8 @@ const AddStudentModal = () => {
     // setShowFit(value === 'FIT');
   };
 
+  // const [id, setId] = useState('');
+
   const generateIdNumber = (value: string) => {
     const currentYear = selectedDate?.format('YY');
     const degreeInitial = value.charAt(0).toUpperCase();
@@ -142,6 +144,47 @@ const AddStudentModal = () => {
     const id = `${currentYear}${degreeInitial}${facultyCode}${randomNumbers}`;
     return id;
   };
+
+  // const MyFileUploader = () => {
+  //   const handleFileUpload = async (file: { name: any; }) => {
+  //     try {
+  //       const storageReference = storageRef(storage, '');
+  //       const fileRef = child(storageReference, generateIdNumber(selectedOption));
+  //       await uploadBytes(fileRef, file);
+  
+  //       message.success('Image uploaded successfully!');
+  //     } catch (error) {
+  //       console.error('Error uploading image:', error);
+  //       message.error('Failed to upload image.');
+  //     }
+  //   };
+  
+  //   const beforeUpload = (file) => {
+  //     // You can add any custom validation or checks here
+  //     // Return false to prevent uploading the file
+  //     return true;
+  //   };
+
+  
+const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+  try {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      // No file selected
+      return;
+    }
+
+    const fileName = generateIdNumber(selectedOption);
+
+    const storageReference = storageRef(storage,  fileName + '.png'); // Replace with your desired storage path
+    await uploadBytes(storageReference, file);
+
+    console.log('Image uploaded successfully!');
+  } catch (error) {
+    console.error('Error uploading image:', error);
+  }
+};
 
   return (
     <>
@@ -161,7 +204,7 @@ const AddStudentModal = () => {
           </Button>,
         ]}
       >
-        <Upload
+        {/* <Upload
                 action={storageRef.child('19B030067').toString()}
                 listType="picture-circle"
                 // fileList={fileList}
@@ -176,7 +219,11 @@ const AddStudentModal = () => {
                 }}
                 >
                 {fileList.length >= 8 ? null : uploadButton}
-            </Upload>
+            </Upload> */}
+
+        <div>
+              <input type="file" onChange={handleFileUpload} />
+            </div>
         <Form layout="vertical" form={form} onFinish={handleAddStudent} >
           <Form.Item
             name="firstname"

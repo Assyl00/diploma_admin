@@ -22,4 +22,5 @@ const app = firebase.initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 
 export const storage = getStorage(app);
+export const storageImg = firebase.storage();
 //export const storageRef = storage.ref();

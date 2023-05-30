@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { storage } from '../../firebase'
+import { storageImg } from '../../firebase'
 
 interface ImageComponentProps {
     filename: string;
@@ -12,7 +12,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({ filename }) => {
     const fetchImage = async () => {
       try {
         // Get a reference to the image file
-        const imageRef = storage.ref().child(filename);
+        const imageRef = storageImg.ref().child(filename);
 
         // Get the download URL of the image
         const url = await imageRef.getDownloadURL();
