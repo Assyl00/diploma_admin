@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { getDatabase } from "firebase/database";
+import { getStorage } from 'firebase/storage';
 import firebase from 'firebase/compat/app';
 import 'firebase/storage';
 import 'firebase/database';
@@ -20,5 +21,5 @@ const app = firebase.initializeApp(firebaseConfig);
 
 export const db = getDatabase(app);
 
-export const storage = firebase.storage();
-export const storageRef = storage.ref();
+export const storage = getStorage(app);
+//export const storageRef = storage.ref();
