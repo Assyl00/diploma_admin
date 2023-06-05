@@ -16,8 +16,6 @@ import '../components/student/style.css'
   const { Search } = Input;
   const onSearch = (value: string) => console.log(value);
 
-  
-
   interface MyFormItemGroupProps {
     prefix: string | number | (string | number)[];
     children: React.ReactNode;
@@ -27,20 +25,6 @@ import '../components/student/style.css'
     return Array.isArray(str) ? str : [str];
   }
   
-  // const MyFormItemGroup = ({ prefix, children }: MyFormItemGroupProps) => {
-  //   const prefixPath = React.useContext(MyFormItemContext);
-  //   const concatPath = React.useMemo(() => [...prefixPath, ...toArr(prefix)], [prefixPath, prefix]);
-  
-  //   return <MyFormItemContext.Provider value={concatPath}>{children}</MyFormItemContext.Provider>;
-  // };
-  
-  // const MyFormItem = ({ name, ...props }: FormItemProps) => {
-  //   const prefixPath = React.useContext(MyFormItemContext);
-  //   const concatName = name !== undefined ? [...prefixPath, ...toArr(name)] : undefined;
-  
-  //   return <Form.Item name={concatName} {...props} />;
-  // };
-
   const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -120,7 +104,6 @@ import '../components/student/style.css'
         console.log(value);
     };
 
-   
 // -----------------------------------------------------------------------------------------------------
     
     interface Item {
@@ -154,8 +137,6 @@ import '../components/student/style.css'
     const [selectedStudent, setSelectedStudent] = useState<Item | null>(null);
     const [editedStudent, setEditedStudent] = useState<Item | null>(null);
     const filename = selectedStudent?.key.concat(".png")
-
-    
 
     const handleEdit = (student: Item) => {
       setSelectedStudent(student);

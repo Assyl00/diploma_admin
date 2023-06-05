@@ -98,6 +98,7 @@ const AddStudentModal = () => {
     try {
       // const db = getDatabase();
       const customId = generateIdNumber(selectedOption);
+      // handleFileUpload(customId);
 
       const newPersonRef = ref(db, 'persons/' + customId);
 
@@ -111,6 +112,8 @@ const AddStudentModal = () => {
       form.resetFields();
 
       setVisible(false);
+      console.log(formattedData.id);
+      
     } catch (error) {
       console.log('Error adding student:', error);
     }
@@ -165,7 +168,8 @@ const AddStudentModal = () => {
   //     return true;
   //   };
 
-  
+const idNumber = generateIdNumber(selectedOption);
+
 const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
   try {
     const file = e.target.files?.[0];
@@ -181,6 +185,7 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     await uploadBytes(storageReference, file);
 
     console.log('Image uploaded successfully!');
+    console.log(fileName)
   } catch (error) {
     console.error('Error uploading image:', error);
   }
@@ -306,7 +311,8 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
           </Form.Item>
         </Form>
         <p>{selectedDate ? selectedDate.format('YY') : 'Нет даты'}</p>
-        <p>{generateIdNumber(selectedOption)}</p>
+        {/* <p>{generateIdNumber(selectedOption)}</p> */}
+        <p>{idNumber}</p>
         <p>Выбранное значение Select 2: {selectedFacultyOption}</p>
       </Modal>
     </>
