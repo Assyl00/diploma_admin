@@ -5,8 +5,8 @@ import {db, storage} from "../../firebase";
 import { child, ref, set } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
-import moment, { Moment } from 'moment';
 import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/ru';
 import { ref as storageRef, uploadBytes } from "firebase/storage";
 import "./style.css";
 
@@ -39,37 +39,25 @@ const AddStudentModal = () => {
   ]);
 
 
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
-  const handleDateChange = (date: Dayjs | null) => {
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(dayjs());
+
+  const handleDateChange = (date: dayjs.Dayjs | null) => {
     setSelectedDate(date);
   };
 
-  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState<string>('B');
 
-
-  const handleSelectChange = (value: string | undefined) => {
-    setSelectedOption(value || '');
+  const handleSelectChange = (value: string) => {
+    setSelectedOption(value || 'B');
   };
   
-  const [selectedFacultyOption, setselectedFacultyOption] = useState<string>('');
+  const [selectedFacultyOption, setselectedFacultyOption] = useState<string>('01');
 
   const handleFacultySelectChange = (value: string) => {
     handlePrevSelectChange(value);
     setselectedFacultyOption(value);
   };
-  // const handleUpload = async (file: File | undefined) => {
-  //   if(file) {
-  //     try {
-  //       const storageReference = storageRef.child(generateIdNumber(selectedOption));
-  //       const snapshot = await storageReference.put(file);
-  //       console.log('Image uploaded successfully!');
-  //       // Другие действия после успешной загрузки...
-  //     } catch (error) {
-  //       console.error('Error uploading image:', error);
-  //     }
-  // }
-  // };
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -96,8 +84,7 @@ const AddStudentModal = () => {
 
   const handleAddStudent = async (values: any) => {
     try {
-      // const db = getDatabase();
-      const customId = generateIdNumber(selectedOption);
+      const customId = id;
 
       const newPersonRef = ref(db, 'persons/' + customId);
 
@@ -117,53 +104,27 @@ const AddStudentModal = () => {
   };
 
   const { Option } = Select;
-  const [prevSelectValue, setPrevSelectValue] = useState('');
+  const [prevSelectValue, setPrevSelectValue] = useState('01');
   const [showFit, setShowFit] = useState(false);
 
   const handlePrevSelectChange = (value: string) => {
-    // const { name, value } = e.target;
-    // setFormData((prevData) => ({
-    //   ...prevData,
-    //   [name]: value,
-    // }));
-    
     setPrevSelectValue(value);
-
-    // Set the condition based on the selected value
-    // setShowFit(value === 'FIT');
   };
 
-  // const [id, setId] = useState('');
-
-  const generateIdNumber = (value: string) => {
+  const generateIdNumber = (value: string | undefined) => {
+    value==undefined?value="B":value.toUpperCase();
     const currentYear = selectedDate?.format('YY');
-    const degreeInitial = value.charAt(0).toUpperCase();
-    const facultyCode = selectedFacultyOption;
+    let degreeInitial = value.charAt(0).toUpperCase();
+    degreeInitial==undefined?degreeInitial="B":degreeInitial.charAt(0).toUpperCase();
+    const facultyCode = selectedFacultyOption
     const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(4, "0");
 
     const id = `${currentYear}${degreeInitial}${facultyCode}${randomNumbers}`;
     return id;
   };
 
-  // const MyFileUploader = () => {
-  //   const handleFileUpload = async (file: { name: any; }) => {
-  //     try {
-  //       const storageReference = storageRef(storage, '');
-  //       const fileRef = child(storageReference, generateIdNumber(selectedOption));
-  //       await uploadBytes(fileRef, file);
-  
-  //       message.success('Image uploaded successfully!');
-  //     } catch (error) {
-  //       console.error('Error uploading image:', error);
-  //       message.error('Failed to upload image.');
-  //     }
-  //   };
-  
-  //   const beforeUpload = (file) => {
-  //     // You can add any custom validation or checks here
-  //     // Return false to prevent uploading the file
-  //     return true;
-  //   };
+
+  let id = generateIdNumber(selectedOption);
 
   
 const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -171,13 +132,12 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) {
-      // No file selected
       return;
     }
 
-    const fileName = generateIdNumber(selectedOption);
+    const fileName = id;
 
-    const storageReference = storageRef(storage,  fileName + '.png'); // Replace with your desired storage path
+    const storageReference = storageRef(storage,  fileName + '.png');
     await uploadBytes(storageReference, file);
 
     console.log('Image uploaded successfully!');
@@ -204,26 +164,10 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
           </Button>,
         ]}
       >
-        {/* <Upload
-                action={storageRef.child('19B030067').toString()}
-                listType="picture-circle"
-                // fileList={fileList}
-                onPreview={handlePreview}
-                // onChange={handleChange}
-                beforeUpload={() => false} // Disable automatic upload
-                onChange={(info) => {
-                  const file = info.file?.originFileObj; // Use optional chaining (?.)
-                  if (file && info.file.status === 'done') {
-                    handleUpload(file);
-                  }
-                }}
-                >
-                {fileList.length >= 8 ? null : uploadButton}
-            </Upload> */}
 
         <div>
-              <input type="file" onChange={handleFileUpload} />
-            </div>
+          <input className='file_upload' type="file" onChange={handleFileUpload} />
+        </div>
         <Form layout="vertical" form={form} onFinish={handleAddStudent} >
           <Form.Item
             name="firstname"
@@ -251,30 +195,33 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
             name="sex"
             label="Sex"
             rules={[{ required: true, message: 'Please enter the sex' }]}
+            initialValue={"Male"}
           >
             <Select>
               <Option value="M">Male</Option>
               <Option value="F">Female</Option>
             </Select>
           </Form.Item>
-          <Form.Item name="starting_year" label="Starting year">
+          <Form.Item name="starting_year" label="Starting year" initialValue={selectedDate}>
             <DatePicker style={{ width: '100%' }} value={selectedDate} onChange={handleDateChange} format={yearFormat} picker="year" />
           </Form.Item>
           <Form.Item 
             name="degree"
             label="Degree"
             rules={[{ required: true, message: 'Please enter the degree' }]}
+            initialValue={"Bachelor"}
           >
             <Select onChange={handleSelectChange}>
-              <Option value="Bachelor">Bachelor</Option>
-              <Option value="Master">Master</Option>
-              <Option value="PhD">PhD</Option>
+              <Option value="B">Bachelor</Option>
+              <Option value="M">Master</Option>
+              <Option value="P">PhD</Option>
             </Select>
           </Form.Item>
           <Form.Item
             name="faculty"
             label="Faculty"
             rules={[{ required: true, message: 'Please enter the faculty' }]}
+            initialValue={"01"}
           >
             <Select onChange={handleFacultySelectChange}>
               <Option value="01">FIT</Option>
@@ -285,6 +232,7 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
             name="major"
             label="Major"
             rules={[{ required: true, message: 'Please enter the major' }]}
+            initialValue={"IS"}
           >
             <Select>
               {prevSelectValue === '01' ? (
@@ -305,9 +253,6 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
             </Select>
           </Form.Item>
         </Form>
-        <p>{selectedDate ? selectedDate.format('YY') : 'Нет даты'}</p>
-        <p>{generateIdNumber(selectedOption)}</p>
-        <p>Выбранное значение Select 2: {selectedFacultyOption}</p>
       </Modal>
     </>
   );

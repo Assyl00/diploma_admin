@@ -1,4 +1,19 @@
-.ant-upload-list {
-    display: flex;
-    justify-content: center;
+/* Стили для input типа file */
+input[type="file"] {
+    /* Скрыть кнопку обзора файла */
+    /* visibility: hidden; */
+    /* position: absolute; */
+    /* Добавьте другие стили по вашему выбору */
+}
+
+/* Стили для кнопки обзора файла */
+input[type="file"]::file-selector-button {
+/* Настройте внешний вид кнопки */
+background-color: #eaeaea;
+color: #333;
+padding: 8px 16px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+/* Добавьте другие стили по вашему выбору */
 }
