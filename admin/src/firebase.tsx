@@ -17,10 +17,11 @@ const firebaseConfig = {
     measurementId: "G-RT33VLWW4G"
 };
 // // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
+export const app = firebase.initializeApp(firebaseConfig);
 
 export const db = getDatabase(app);
 
 export const storage = getStorage(app);
 export const storageImg = firebase.storage();
-//export const storageRef = storage.ref();
+
+export default firebaseConfig

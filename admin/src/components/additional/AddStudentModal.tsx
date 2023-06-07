@@ -3,12 +3,15 @@ import { Modal, Form, Input, Button, Upload, UploadFile, message } from 'antd';
 import { DatePicker, Select } from 'antd';
 import {db, storage} from "../../firebase";
 import { child, ref, set } from "firebase/database";
+import { app } from "../../firebase";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ru';
-import { ref as storageRef, uploadBytes } from "firebase/storage";
+import { ref as storageRef, uploadBytes, getStorage } from "firebase/storage";
 import "./style.css";
+import "firebase/storage";
+import { storageImg } from "../../firebase"
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -126,25 +129,42 @@ const AddStudentModal = () => {
 
   let id = generateIdNumber(selectedOption);
 
-  
-const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-  try {
-    const file = e.target.files?.[0];
-
-    if (!file) {
-      return;
+const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const files = e.target.files;
+  if (files) {
+    const userFolderRef = storageImg.ref().child(`${id}//`);
+    for (let i = 0; i < files.length; i++) {
+      // [user, setUser] = useState(`${i}`);
+      const file = files[i];
+      const fileRef = userFolderRef.child(file.name);
+      fileRef.put(file).then((snapshot) => {
+        console.log("Файл успешно загружен");
+      });
     }
-
-    const fileName = id;
-
-    const storageReference = storageRef(storage,  fileName + '.png');
-    await uploadBytes(storageReference, file);
-
-    console.log('Image uploaded successfully!');
-  } catch (error) {
-    console.error('Error uploading image:', error);
   }
 };
+const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  handleFileUpload(e);
+};
+
+// const [student, setStudent] = useState(id);
+// const [counter, setCounter] = useState(1);
+// const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+//   const files = e.target.files;
+//   if (files) {
+//     const userFolderRef = storageImg.ref().child(`${id}//`);
+//     for (let i = 0; i < files.length; i++) {
+//       // [user, setUser] = useState(`${i}`);
+//       const file = files[i];
+//       const fileName = `${counter + i}.png`
+//       const fileRef = userFolderRef.child(fileName);
+//       fileRef.put(file).then((snapshot) => {
+//         console.log("Файл успешно загружен");
+//       });
+//     }
+//     setCounter(counter + files.length);
+//   }
+// };
 
   return (
     <>
@@ -165,8 +185,8 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         ]}
       >
 
-        <div>
-          <input className='file_upload' type="file" onChange={handleFileUpload} />
+        <div className='input-div'>
+          <input className='file_upload' multiple type="file" onChange={handleInputChange} />
         </div>
         <Form layout="vertical" form={form} onFinish={handleAddStudent} >
           <Form.Item
@@ -187,7 +207,7 @@ const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
           <Form.Item
             name="middlename"
             label="Middle Name"
-            rules={[{ required: false, message: 'Please enter the middle name' }]}
+            rules={[{ required: true, message: 'Please enter the middle name' }]}
           >
             <Input  />
           </Form.Item>

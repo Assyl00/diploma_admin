@@ -1,19 +1,29 @@
-/* Стили для input типа file */
-input[type="file"] {
-    /* Скрыть кнопку обзора файла */
-    /* visibility: hidden; */
-    /* position: absolute; */
-    /* Добавьте другие стили по вашему выбору */
+.input-div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-/* Стили для кнопки обзора файла */
-input[type="file"]::file-selector-button {
-/* Настройте внешний вид кнопки */
-background-color: #eaeaea;
-color: #333;
-padding: 8px 16px;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-/* Добавьте другие стили по вашему выбору */
+.file_upload::file-selector-button {
+    /* Настройте внешний вид кнопки */
+    background-color: #fff;
+    border: 1px solid #1890FF;
+    border-color: #1890FF;
+    color: #000;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all ease 0.3s;
+    /* Добавьте другие стили по вашему выбору */
+}
+.file_upload::file-selector-button:hover {
+    /* Настройте внешний вид кнопки */
+    background-color: #4899fc;
+    color: #fff;
+}
+
+.file_upload{
+    width: 50%;
+    text-overflow: ellipsis;
 }
