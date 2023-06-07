@@ -129,6 +129,7 @@ const AddStudentModal = () => {
 
   let id = generateIdNumber(selectedOption);
 
+const [user, setUser] = useState("John");
 const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
   const files = e.target.files;
   if (files) {
