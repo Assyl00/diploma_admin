@@ -127,29 +127,8 @@ const AddStudentModal = () => {
   };
 
 
-  let id = generateIdNumber(selectedOption);
+const id = generateIdNumber(selectedOption);
 
-const [user, setUser] = useState("John");
-const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-  const files = e.target.files;
-  if (files) {
-    const userFolderRef = storageImg.ref().child(`${id}//`);
-    for (let i = 0; i < files.length; i++) {
-      // [user, setUser] = useState(`${i}`);
-      const file = files[i];
-      const fileRef = userFolderRef.child(file.name);
-      fileRef.put(file).then((snapshot) => {
-        console.log("Файл успешно загружен");
-      });
-    }
-  }
-};
-const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  handleFileUpload(e);
-};
-
-// const [student, setStudent] = useState(id);
-// const [counter, setCounter] = useState(1);
 // const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
 //   const files = e.target.files;
 //   if (files) {
@@ -157,15 +136,42 @@ const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 //     for (let i = 0; i < files.length; i++) {
 //       // [user, setUser] = useState(`${i}`);
 //       const file = files[i];
-//       const fileName = `${counter + i}.png`
-//       const fileRef = userFolderRef.child(fileName);
+//       const fileRef = userFolderRef.child(file.name);
 //       fileRef.put(file).then((snapshot) => {
 //         console.log("Файл успешно загружен");
 //       });
 //     }
-//     setCounter(counter + files.length);
 //   }
 // };
+
+// const [student, setStudent] = useState(id);
+const [counter, setCounter] = useState(1);
+const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const files = e.target.files;
+  // console.log(student);
+  console.log(id);
+  if (files) {
+    // console.log(student);
+    console.log(id);
+    const userFolderRef = storageImg.ref().child(`${id}//`);
+    for (let i = 0; i < files.length; i++) {
+      // console.log(student);
+      console.log(id);
+      const file = files[i];
+      const fileName = `${counter + i}.png`
+      const fileRef = userFolderRef.child(fileName);
+      fileRef.put(file).then((snapshot) => {
+        console.log("Файл успешно загружен");
+      });
+    }
+    setCounter(counter + files.length);
+  }
+};
+const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  // console.log(student);
+  console.log(id);
+  handleFileUpload(e);
+};
 
   return (
     <>
