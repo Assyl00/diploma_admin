@@ -51,17 +51,6 @@ import '../components/student/style.css'
     },
   ]);
 
-  
-  // const [fileList, setFileList] = useState<UploadFile[]>([
-  //   {
-  //     uid: '-1',
-  //     name: 'image.png',
-  //     status: 'done',
-  //     url: <ImageComponent filename={filename} />,
-  //   }
-  // ]);
-
-
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as RcFile);
