@@ -73,13 +73,6 @@ const AddStudentModal = () => {
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
     setFileList(newFileList);
 
-  // const uploadButton = (
-  //   <div>
-  //     <PlusOutlined />
-  //     <div style={{ marginTop: 8 }}>Upload</div>
-  //   </div>
-  // );
-
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -151,7 +144,7 @@ const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 
   return (
     <>
-      <Button type="primary" onClick={() => setVisible(true)} style={{ borderRadius: 0 }}>
+      <Button className='uploadButton' type="primary" onClick={() => setVisible(true)}>
         Add Student
       </Button>
       <Modal

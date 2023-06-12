@@ -230,6 +230,7 @@ import '../components/student/style.css'
 
   return ( 
         <>
+        <div style={{height:148}}></div>
         {AddStudentModal && <AddStudentModal/>}
         <Search placeholder="Enter some info about student" allowClear onSearch={onSearch} style={{ boxSizing: 'border-box', borderRadius: 0 }} value={searchText} onChange={handleSearch} />
 

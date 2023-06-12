@@ -22,7 +22,7 @@ const Monitoring = () => {
       onValue(postsRef, (snapshot) => {
         const data = snapshot.val();
         const transformedData = data
-          ? Object.keys(data).map((key) => ({ key, ...data[key] }))
+          ? Object.keys(data).map((key) => ({ key, ...data[key] })).reverse()
           : [];
         setPostData(transformedData);
         
@@ -33,7 +33,7 @@ const Monitoring = () => {
 
     return (  
         <>
-			<main className="section">
+			<main className="section" style={{paddingTop: 200}}>
 			<div className="container">
 				<ul className="projects">
 					{postData.map((postData) => {

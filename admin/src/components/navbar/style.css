@@ -3,6 +3,11 @@
 	box-shadow: 0px 19px 12px rgba(0, 0, 0, 0.02), 0px 9px 9px rgba(0, 0, 0, 0.03), 0px 2px 5px rgba(0, 0, 0, 0.03), 0px 0px 0px rgba(0, 0, 0, 0.03);
 	color: var(--nav-text);
 	letter-spacing: normal;
+	position: fixed;
+	width: 100%;
+	background-color: white;
+	height: 116px;
+	z-index: 1;
 }
 
 .nav-row {

@@ -24,3 +24,11 @@
     width: 50%;
     text-overflow: ellipsis;
 }
+
+.uploadButton{
+    width: 100%;
+    border-radius: 0;
+    position: fixed;
+    z-index: 1;
+    margin-top: 116px;
+}
