@@ -37,16 +37,6 @@ const Navbar = () => {
 								Students
 							</NavLink>
 						</li>
-						{/* <li className="nav-list__item">
-							<NavLink
-								to="/"
-								className={({ isActive }) =>
-									isActive ? activeLink : normalLink
-								}
-							>
-								Sign out
-							</NavLink>
-						</li> */}
 					</ul>
 				</div>
             </div>

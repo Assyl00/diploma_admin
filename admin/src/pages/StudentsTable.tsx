@@ -1,6 +1,6 @@
 import { Modal, Select, Table } from 'antd';
 import React from 'react';
-import { Form, Button, Upload, Input, Space } from 'antd';
+import { Form, Button, Input } from 'antd';
 import { useState, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile, UploadProps } from 'antd/es/upload';
@@ -125,7 +125,7 @@ import '../components/student/style.css'
 
     const [selectedStudent, setSelectedStudent] = useState<Item | null>(null);
     const [editedStudent, setEditedStudent] = useState<Item | null>(null);
-    const filename = selectedStudent?.key.concat(".png")
+    const filename = selectedStudent?.key
 
     const handleEdit = (student: Item) => {
       setSelectedStudent(student);
@@ -135,7 +135,6 @@ import '../components/student/style.css'
 
     const handleModalClose = () => {
       setSelectedStudent(null);
-      // setEditedStudent(null);
       handleCancel();
     };
   
@@ -149,14 +148,11 @@ import '../components/student/style.css'
 
     const handleSave = () => {
       if(selectedStudent && editedStudent){
-      // Update the student object with edited values
-      // setSelectedStudent(editedStudent);
       setSelectedStudent((prevStudent) => ({
         ...prevStudent,
         ...editedStudent,
       }));
 
-      // Create an object with only the properties to be updated
       const updates: Partial<Item> = {
         faculty: editedStudent.faculty,
         firstname: editedStudent.firstname,
@@ -167,7 +163,6 @@ import '../components/student/style.css'
         starting_year: editedStudent.starting_year,
       };
 
-      //save object to Realtime Database
       update(ref(db, `persons/${selectedStudent.key}`), updates)
         .then(() => {
           console.log('Data successfully updated in the Realtime Database.');
@@ -178,7 +173,6 @@ import '../components/student/style.css'
           console.error('Error updating data in the Realtime Database:', error);
         });
   
-      // Perform additional save logic if needed
       }
     };
     
@@ -193,11 +187,6 @@ import '../components/student/style.css'
           dataIndex: 'lastname', 
           key: 'lastname',
         },
-        // {
-        //   title: 'Факультет',
-        //   dataIndex: 'faculty',
-        //   key: 'faculty',
-        // },
         {
           title: 'Специальность',
           dataIndex: 'major',
@@ -234,7 +223,6 @@ import '../components/student/style.css'
 
   const { Option } = Select;
   const [prevSelectValue, setPrevSelectValue] = useState('');
-  // const [showFit, setShowFit] = useState(false);
 
   const handlePrevSelectChange = (value: string) => {
     setPrevSelectValue(value);
@@ -304,7 +292,6 @@ import '../components/student/style.css'
                 <Form.Item label="ID">
                   <Input name = "id" value={editedStudent?.key} onChange={handleInputChange} disabled/>
                 </Form.Item>
-
               <Button type="primary" htmlType="submit" onClick={handleSave} >
                 Submit
               </Button>

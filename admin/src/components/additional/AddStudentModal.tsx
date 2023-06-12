@@ -1,14 +1,12 @@
-import { ChangeEvent, SetStateAction, useState } from 'react';
-import { Modal, Form, Input, Button, Upload, UploadFile, message } from 'antd';
+import { ChangeEvent, useState } from 'react';
+import { Modal, Form, Input, Button, UploadFile } from 'antd';
 import { DatePicker, Select } from 'antd';
-import {db, storage} from "../../firebase";
-import { child, ref, set } from "firebase/database";
-import { app } from "../../firebase";
+import {db} from "../../firebase";
+import { ref, set } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
-import { ref as storageRef, uploadBytes, getStorage } from "firebase/storage";
 import "./style.css";
 import "firebase/storage";
 import { storageImg } from "../../firebase"
@@ -129,33 +127,15 @@ const AddStudentModal = () => {
 
 const id = generateIdNumber(selectedOption);
 
-// const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-//   const files = e.target.files;
-//   if (files) {
-//     const userFolderRef = storageImg.ref().child(`${id}//`);
-//     for (let i = 0; i < files.length; i++) {
-//       // [user, setUser] = useState(`${i}`);
-//       const file = files[i];
-//       const fileRef = userFolderRef.child(file.name);
-//       fileRef.put(file).then((snapshot) => {
-//         console.log("Файл успешно загружен");
-//       });
-//     }
-//   }
-// };
-
-// const [student, setStudent] = useState(id);
 const [counter, setCounter] = useState(1);
 const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
   const files = e.target.files;
-  // console.log(student);
+
   console.log(id);
   if (files) {
-    // console.log(student);
     console.log(id);
     const userFolderRef = storageImg.ref().child(`${id}//`);
     for (let i = 0; i < files.length; i++) {
-      // console.log(student);
       console.log(id);
       const file = files[i];
       const fileName = `${counter + i}.png`
@@ -168,8 +148,6 @@ const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
   }
 };
 const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-  // console.log(student);
-  console.log(id);
   handleFileUpload(e);
 };
 

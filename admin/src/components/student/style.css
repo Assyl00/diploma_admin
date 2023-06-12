@@ -1,6 +1,5 @@
 .student {
 	width: 220px;
-	height: 480px;
 	background-color: var(--project-card-bg);
 	box-shadow: var(--box-shadow);
 	border-radius: 16px;

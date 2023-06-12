@@ -5,7 +5,6 @@
 }
 
 .file_upload::file-selector-button {
-    /* Настройте внешний вид кнопки */
     background-color: #fff;
     border: 1px solid #1890FF;
     border-color: #1890FF;
@@ -15,10 +14,8 @@
     border-radius: 4px;
     cursor: pointer;
     transition: all ease 0.3s;
-    /* Добавьте другие стили по вашему выбору */
 }
 .file_upload::file-selector-button:hover {
-    /* Настройте внешний вид кнопки */
     background-color: #4899fc;
     color: #fff;
 }

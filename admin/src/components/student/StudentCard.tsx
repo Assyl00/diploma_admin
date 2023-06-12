@@ -32,7 +32,7 @@ const StudentCard = ({key, firstname, lastname, id, enter_or_exit, enter_time}: 
 
 	return (
 			<li className="student">
-				<ImageComponent filename= {id! + '.png'} />
+				<ImageComponent filename= {`${id!}`} />
 				<div className='student__card'>
 					<p>{firstname}</p>
 					<p>{lastname}</p>
