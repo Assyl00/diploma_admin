@@ -1,10 +1,10 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useMemo } from 'react';
 import { Modal, Form, Input, Button, UploadFile } from 'antd';
 import { DatePicker, Select } from 'antd';
 import {db} from "../../firebase";
 import { ref, set } from "firebase/database";
 import { RcFile, UploadProps } from 'antd/es/upload';
-import { PlusOutlined } from '@ant-design/icons';
+// import { PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import "./style.css";
@@ -73,12 +73,12 @@ const AddStudentModal = () => {
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
     setFileList(newFileList);
 
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+  // const uploadButton = (
+  //   <div>
+  //     <PlusOutlined />
+  //     <div style={{ marginTop: 8 }}>Upload</div>
+  //   </div>
+  // );
 
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
@@ -86,9 +86,7 @@ const AddStudentModal = () => {
   const handleAddStudent = async (values: any) => {
     try {
       const customId = id;
-
       const newPersonRef = ref(db, 'persons/' + customId);
-
       const formattedData = {
         id: customId,
         ...values,
@@ -119,13 +117,13 @@ const AddStudentModal = () => {
     degreeInitial==undefined?degreeInitial="B":degreeInitial.charAt(0).toUpperCase();
     const facultyCode = selectedFacultyOption
     const randomNumbers = Math.floor(Math.random() * 100).toString().padStart(4, "0");
-
     const id = `${currentYear}${degreeInitial}${facultyCode}${randomNumbers}`;
     return id;
   };
 
 
-const id = generateIdNumber(selectedOption);
+// const id = generateIdNumber(selectedOption);
+const id = useMemo(() => generateIdNumber(selectedOption), [selectedOption]);
 
 const [counter, setCounter] = useState(1);
 const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
